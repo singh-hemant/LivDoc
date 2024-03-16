@@ -1,6 +1,4 @@
-﻿using LivDocApp.Data;
-using LivDocApp.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using LivDocApp.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -20,6 +18,7 @@ namespace LivDocApp.Data
 
             builder.ApplyConfiguration(new EmployeeEntityConfiguration());
         }
+       
     }
 }
 
@@ -27,9 +26,9 @@ internal class EmployeeEntityConfiguration : IEntityTypeConfiguration<Employee>
 {
     public void Configure(EntityTypeBuilder<Employee> builder)
     {
-        builder.Property(u=>u.Name).HasMaxLength(255);
-        builder.Property(u=>u.SapId).HasMaxLength(8);
-        builder.Property(u=>u.Location).HasMaxLength(255);
+        builder.Property(u => u.Name).HasMaxLength(255);
+        builder.Property(u => u.SapId).HasMaxLength(8);
+        builder.Property(u => u.Location).HasMaxLength(255);
     }
 }
 

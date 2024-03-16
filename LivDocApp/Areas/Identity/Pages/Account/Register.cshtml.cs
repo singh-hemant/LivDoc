@@ -132,6 +132,7 @@ namespace LivDocApp.Areas.Identity.Pages.Account
                 user.Location = Input.Location;
                 user.Name = Input.Name;
                 user.SapId = Input.SapId;
+                user.PhoneNumber = Input.PhoneNumber;
 
                 //await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);

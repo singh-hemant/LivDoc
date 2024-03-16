@@ -1,8 +1,60 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
+    <style>
+        /* Custom styles for the search bar */
+        
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+        .search-container {
+            text-align: center;
+        }
+
+        .search-box {
+            width: 400px;
+            height: 50px;
+            padding: 15px;
+            border: none;
+            border-radius: 25px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            outline: none;
+            font-size: 18px;
+            background-color: #8a2be2; /* Violet color */
+            color: #fff;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+            .search-box::placeholder {
+                color: #fff; /* Placeholder text color */
+            }
+
+            .search-box:focus {
+                width: 500px;
+            }
+
+        .search-button {
+            width: 120px;
+            height: 50px;
+            border: none;
+            border-radius: 25px;
+            background-color: #fff;
+            color: #8a2be2; /* Violet color */
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .search-button:hover {
+                background-color: #dcdcdc; /* Light gray */
+            }
+    </style>
+
+    <div class="search-container">
+        <input type="text" class="search-box" placeholder="Search Doctor by Location, Hospital or Specialization...">
+        <button class="search-button">Search</button>
+    </div>
+
+    <div class="justify-content-center">
+        <a class="btn btn-outline-secondary" asp-controller="Doctors" asp-action="Index">See all Doctors</a>
+    </div>
+

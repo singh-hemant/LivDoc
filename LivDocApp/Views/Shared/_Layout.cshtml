@@ -1,6 +1,39 @@
-﻿<!DOCTYPE html>
+﻿
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #f8f9fa;
+            overflow: hidden;
+            border-bottom: 1px solid #ccc;
+        }
+
+            .navbar a {
+                float: left;
+                display: block;
+                color: #333;
+                text-align: center;
+                padding: 14px 20px;
+                text-decoration: none;
+                font-size: 16px;
+            }
+
+                .navbar a:hover {
+                    background-color: #f0f0f0;
+                }
+
+                .navbar a.active {
+                    background-color: #ddd;
+                }
+    </style>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - LivDocApp</title>
@@ -8,6 +41,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/LivDocApp.styles.css" asp-append-version="true" />
 </head>
+
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">

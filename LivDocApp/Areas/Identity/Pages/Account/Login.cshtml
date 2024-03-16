@@ -6,6 +6,79 @@
 }
 
 
+    <style>
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #800080;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #800080;
+        }
+
+        input[type="text"], input[type="password"], input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #dda0dd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            background-color: #800080;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            input[type="submit"]:hover {
+                background-color: #4b0082;
+            }
+
+        .form-footer {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+            .form-footer a {
+                color: #800080;
+                text-decoration: none;
+            }
+
+                .form-footer a:hover {
+                    text-decoration: underline;
+                }
+
+        .remember-me {
+            margin-bottom: 15px;
+            color: #800080;
+        }
+    </style>
+    <!--    <div class="container">
+        <h2>Login</h2>
+        <form>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <label class="remember-me">
+                <input type="checkbox" id="remember-me" name="remember-me"> Remember Me
+            </label>
+            <input type="submit" value="Login">
+        </form>
+        <div class="form-footer">
+            <a href="#">Forgot Password?</a>
+        </div>
+    </div>
+    -->
+
+
+
 <div class="row d-flex align-items-center justify-content-center">
     <div class="col-md-6 card p-3">
         <h2 color="blue" class="d-flex align-items-center justify-content-center">@ViewData["Title"]</h2>
@@ -24,17 +97,17 @@
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
                 <div class="checkbox mb-3">
-                    <label asp-for="Input.RememberMe" class="form-label">
-                        <input class="form-check-input" asp-for="Input.RememberMe" />
+                    <label asp-for="Input.RememberMe" class="form-label remember-me">
+                        <input class="form-check-input" id="remember-me" asp-for="Input.RememberMe" />
                         @Html.DisplayNameFor(m => m.Input.RememberMe)
                     </label>
                 </div>
                 <div>
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                    <input id="login-submit" type="submit" value="Login" class="w-100 btn btn-lg btn-primary"Log in />
                 </div>
-                <div>
+                <div class="form-footer">
                     <p>
-                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot password?</a>
                     </p>
                     <p>
                         <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Don't have an account? Create one</a>

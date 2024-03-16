@@ -1,15 +1,21 @@
-using LivDocApp.Data;
+﻿using LivDocApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using LivDocApp.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<DoctorsDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DoctorsDbContext") ?? throw new InvalidOperationException("Connection string 'DoctorsDbContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
+builder.Services.AddDbContext<DoctorsDbContext>(options => options.UseSqlServer(
+    builder.Configuration.GetConnectionString("DoctorDbConnection")
     ));
 
 builder.Services.AddDefaultIdentity<Employee>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();

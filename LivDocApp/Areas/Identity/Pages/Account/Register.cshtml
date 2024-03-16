@@ -4,6 +4,60 @@
     ViewData["Title"] = "Register";
 }
 
+<style>
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #800080;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 10px;
+        color: #800080;
+    }
+
+    input[type="text"], input[type="password"], input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+        border: 1px solid #dda0dd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    input[type="submit"] {
+        background-color: #800080;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        input[type="submit"]:hover {
+            background-color: #4b0082;
+        }
+
+    .form-footer {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+        .form-footer a {
+            color: #800080;
+            text-decoration: none;
+        }
+
+            .form-footer a:hover {
+                text-decoration: underline;
+            }
+
+    .remember-me {
+        margin-bottom: 15px;
+        color: #800080;
+    }
+</style>
+
 <div class="row d-flex align-items-center justify-content-center">
     <div class="col-md-6 card p-3">
         <h2 color="blue" class="d-flex align-items-center justify-content-center">@ViewData["Title"]</h2>
@@ -46,7 +100,7 @@
                 <label asp-for="Input.ConfirmPassword">Confirm Password</label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <input id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary" />
         </form>
     </div>
     <!--
