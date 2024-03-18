@@ -1,0 +1,160 @@
+﻿@model LivDocApp.Models.BookViewModel
+
+@{
+    ViewData["Title"] = "Book";
+}
+
+<h1>Doctor's Details</h1>
+
+<div>
+    <h4>Doctor</h4>
+    <hr />
+    <div class="justify-content-around">
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Doctor.Name)
+        </dt>
+        <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Doctor.Name)
+        </dd>
+        <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Doctor.Experience)
+        </dt>
+        <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Doctor.Experience)
+        </dd>
+        <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Doctor.Specialty)
+        </dt>
+        <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Doctor.Specialty.Name)
+        </dd>
+        <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Doctor.Hospital)
+        </dt>
+        <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Doctor.Hospital.Name)
+        </dd>
+        <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Doctor.Email)
+        </dt>
+        <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Doctor.Email)
+        </dd>
+        <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Doctor.PhoneNumber)
+        </dt>
+        <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Doctor.PhoneNumber)
+        </dd>
+    </dl>
+    </div>
+    <div class="justify-content-around">
+        <img src="@Model.Doctor.DocImgURL" alt="Profile Pic" style="max-width: 200px; max-height: 500px;" />
+    </div>
+
+</div>
+
+<hr />
+
+
+<h1>Book Appointment</h1>
+
+<p>Doctor: @Model.Doctor.Name</p>
+<p>Date: @ViewBag.Date</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Time Slot</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var appointment in Model.Appointments)
+        {
+            <tr>
+                <td>@appointment.TimeSlot</td>
+                <td>@appointment.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index">Back to Doctors</a>
+
+
+
+   
+    <style>
+      
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+            .calendar button {
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                padding: 10px 15px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            grid-gap: 10px;
+        }
+
+        .time-slot {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+  
+        <div class="container">
+            <h1>Book an Appointment</h1>
+            <div class="calendar">
+                <button>&lt;</button>
+                <input type="date">
+                <button>&gt;</button>
+            </div>
+            <div class="time-slots">
+                <button class="time-slot">9:00 AM</button>
+                <button class="time-slot">10:00 AM</button>
+                <button class="time-slot">11:00 AM</button>
+                <button class="time-slot">12:00 PM</button>
+                <button class="time-slot">1:00 PM</button>
+                <button class="time-slot">2:00 PM</button>
+                <button class="time-slot">3:00 PM</button>
+                <button class="time-slot">4:00 PM</button>
+                <button class="time-slot">5:00 PM</button>
+            </div>
+        </div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

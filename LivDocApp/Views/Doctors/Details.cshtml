@@ -47,7 +47,7 @@
             @Html.DisplayFor(model => model.PhoneNumber)
         </dd>
     </dl>
-    <img src="model.DocImgURL " alt="Profile Pic" style="max-width: 100px; max-height: 100px;" />
+    <img src="@Url.Content(Model.DocImgURL)" alt="Profile Pic" style="max-width: 100px; max-height: 100px;" />
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.DoctorID">Edit</a> |

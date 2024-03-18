@@ -10,21 +10,25 @@ namespace LivDocApp.Models
         [Required]
         public bool Status { get; set; }
 
-        [Required]
-        public DateTime AppointmentDate { get; set; }
+     
+        public string? PatientName { get; set; }
+     
+        public string? PatientEmail { get; set; }
+      
+        public string? PatientPhoneNumber { get; set; }
 
         [ForeignKey("Doctor")]
-        public int DoctorID { get; set; }
+        public int? DoctorID { get; set; }
         public virtual Doctor Doctor { get; set; }
 
-        [ForeignKey("TimeSlot")]
-        public int TimeSlotID { get; set; }
-        public virtual TimeSlot TimeSlot { get; set; }
+        [Required]
+        [DataType(DataType.Date)]
+        public DateOnly AppointmentDate { get; set; }
 
+        [Required]
         
-
-        
-        
+        public int TimeSlot { get; set; }
 
     }
 }
+

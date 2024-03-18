@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Home";
 }
+ @model List<SearchResultViewModel>
     <style>
         /* Custom styles for the search bar */
         
@@ -47,14 +48,86 @@
             .search-button:hover {
                 background-color: #dcdcdc; /* Light gray */
             }
+
+         /* AJAX popup */
+    #searchResultsPopup {
+        position: absolute;
+        background-color: #f9f9f9;
+        border: 1px solid #ccc;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1;
+    }
+
+    #searchResultsList {
+        list-style-type: none;
+        padding: 0;
+    }
+
+        #searchResultsList li {
+            padding: 5px;
+            cursor: pointer;
+        }
+
+            #searchResultsList li:hover {
+                background-color: #ddd;
+            }
+
     </style>
 
+
+
+
     <div class="search-container">
-        <input type="text" class="search-box" placeholder="Search Doctor by Location, Hospital or Specialization...">
-        <button class="search-button">Search</button>
+    @using (Html.BeginForm("Search", "Home", FormMethod.Get))
+    {
+        <input type="text" name="searchTerm" class="search-box" placeholder="Search Doctor by Location, Hospital or Specialization..." />
+       <input type="submit" value="Search" class="search-button"/>
+    }
     </div>
 
     <div class="justify-content-center">
         <a class="btn btn-outline-secondary" asp-controller="Doctors" asp-action="Index">See all Doctors</a>
     </div>
+
+   
+@if (Model != null){
+<h2>Search Results</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Doctor Name</th>
+                <th>Hospital</th>
+                <th>Specialty</th>
+                <th>Location</th>
+                <th>Book Appointment</th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            @foreach (var result in Model)
+            {
+                <tr>
+                    <td>@result.DoctorName</td>
+                    <td>@result.HospitalName</td>
+                    <td>@result.SpecialtyName</td>
+                    <td>@result.LocationName</td>
+                    <td>
+                        <form asp-controller="Home" asp-action="Book" method="post">
+                            <input type="hidden" name="docID" value="@result.DoctorId" />
+                            <button type="submit" class=" btn btn-success selectDoctorLink">Book</button>
+                        </form>
+                    </td>
+                    
+                </tr>
+            }
+      
+        </tbody>
+    </table>
+}
+
+
+
+
 

@@ -16,5 +16,8 @@ namespace LivDocApp.Data
 
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Hospital> Hospitals { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<Specialty> Specialties { get; set; }
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LivDocApp.Migrations
 {
     [DbContext(typeof(DoctorsDbContext))]
-    [Migration("20240315154922_fs5")]
-    partial class fs5
+    [Migration("20240318195144_secondMigration")]
+    partial class secondMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,23 +33,30 @@ namespace LivDocApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppointmentID"));
 
-                    b.Property<DateTime>("AppointmentDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("AppointmentDate")
+                        .HasColumnType("date");
 
-                    b.Property<int>("DoctorID")
+                    b.Property<int?>("DoctorID")
                         .HasColumnType("int");
+
+                    b.Property<string>("PatientEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PatientName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PatientPhoneNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
-                    b.Property<int>("TimeSlotID")
+                    b.Property<int>("TimeSlot")
                         .HasColumnType("int");
 
                     b.HasKey("AppointmentID");
 
                     b.HasIndex("DoctorID");
-
-                    b.HasIndex("TimeSlotID");
 
                     b.ToTable("Appointments");
                 });
@@ -63,7 +70,6 @@ namespace LivDocApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DoctorID"));
 
                     b.Property<string>("DocImgURL")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -115,7 +121,7 @@ namespace LivDocApp.Migrations
 
                     b.HasIndex("LocationID");
 
-                    b.ToTable("Hospital");
+                    b.ToTable("Hospitals");
                 });
 
             modelBuilder.Entity("LivDocApp.Models.Location", b =>
@@ -144,7 +150,7 @@ namespace LivDocApp.Migrations
 
                     b.HasKey("LocationId");
 
-                    b.ToTable("Location");
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("LivDocApp.Models.Specialty", b =>
@@ -161,45 +167,16 @@ namespace LivDocApp.Migrations
 
                     b.HasKey("SpecialtyId");
 
-                    b.ToTable("Specialty");
-                });
-
-            modelBuilder.Entity("LivDocApp.Models.TimeSlot", b =>
-                {
-                    b.Property<int>("TimeSlotID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TimeSlotID"));
-
-                    b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time");
-
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time");
-
-                    b.HasKey("TimeSlotID");
-
-                    b.ToTable("TimeSlot");
+                    b.ToTable("Specialties");
                 });
 
             modelBuilder.Entity("LivDocApp.Models.Appointment", b =>
                 {
                     b.HasOne("LivDocApp.Models.Doctor", "Doctor")
                         .WithMany()
-                        .HasForeignKey("DoctorID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LivDocApp.Models.TimeSlot", "TimeSlot")
-                        .WithMany()
-                        .HasForeignKey("TimeSlotID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DoctorID");
 
                     b.Navigation("Doctor");
-
-                    b.Navigation("TimeSlot");
                 });
 
             modelBuilder.Entity("LivDocApp.Models.Doctor", b =>

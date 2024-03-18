@@ -1,17 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace LivDocApp.Migrations
 {
     /// <inheritdoc />
-    public partial class fm : Migration
+    public partial class firstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Location",
+                name: "Locations",
                 columns: table => new
                 {
                     LocationId = table.Column<int>(type: "int", nullable: false)
@@ -23,11 +24,11 @@ namespace LivDocApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Location", x => x.LocationId);
+                    table.PrimaryKey("PK_Locations", x => x.LocationId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Specialty",
+                name: "Specialties",
                 columns: table => new
                 {
                     SpecialtyId = table.Column<int>(type: "int", nullable: false)
@@ -36,11 +37,11 @@ namespace LivDocApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Specialty", x => x.SpecialtyId);
+                    table.PrimaryKey("PK_Specialties", x => x.SpecialtyId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Hospital",
+                name: "Hospitals",
                 columns: table => new
                 {
                     HospitalID = table.Column<int>(type: "int", nullable: false)
@@ -50,11 +51,11 @@ namespace LivDocApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Hospital", x => x.HospitalID);
+                    table.PrimaryKey("PK_Hospitals", x => x.HospitalID);
                     table.ForeignKey(
-                        name: "FK_Hospital_Location_LocationID",
+                        name: "FK_Hospitals_Locations_LocationID",
                         column: x => x.LocationID,
-                        principalTable: "Location",
+                        principalTable: "Locations",
                         principalColumn: "LocationId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -66,28 +67,58 @@ namespace LivDocApp.Migrations
                     DoctorID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Experience = table.Column<int>(type: "int", nullable: false),
                     SpecialtyID = table.Column<int>(type: "int", nullable: false),
                     HospitalID = table.Column<int>(type: "int", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Image = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    DocImgURL = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Doctors", x => x.DoctorID);
                     table.ForeignKey(
-                        name: "FK_Doctors_Hospital_HospitalID",
+                        name: "FK_Doctors_Hospitals_HospitalID",
                         column: x => x.HospitalID,
-                        principalTable: "Hospital",
+                        principalTable: "Hospitals",
                         principalColumn: "HospitalID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Doctors_Specialty_SpecialtyID",
+                        name: "FK_Doctors_Specialties_SpecialtyID",
                         column: x => x.SpecialtyID,
-                        principalTable: "Specialty",
+                        principalTable: "Specialties",
                         principalColumn: "SpecialtyId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Appointments",
+                columns: table => new
+                {
+                    AppointmentID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    PatientName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PatientEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PatientPhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DoctorID = table.Column<int>(type: "int", nullable: true),
+                    AppointmentDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    TimeSlot = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Appointments", x => x.AppointmentID);
+                    table.ForeignKey(
+                        name: "FK_Appointments_Doctors_DoctorID",
+                        column: x => x.DoctorID,
+                        principalTable: "Doctors",
+                        principalColumn: "DoctorID");
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointments_DoctorID",
+                table: "Appointments",
+                column: "DoctorID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Doctors_HospitalID",
@@ -100,8 +131,8 @@ namespace LivDocApp.Migrations
                 column: "SpecialtyID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Hospital_LocationID",
-                table: "Hospital",
+                name: "IX_Hospitals_LocationID",
+                table: "Hospitals",
                 column: "LocationID");
         }
 
@@ -109,16 +140,19 @@ namespace LivDocApp.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Appointments");
+
+            migrationBuilder.DropTable(
                 name: "Doctors");
 
             migrationBuilder.DropTable(
-                name: "Hospital");
+                name: "Hospitals");
 
             migrationBuilder.DropTable(
-                name: "Specialty");
+                name: "Specialties");
 
             migrationBuilder.DropTable(
-                name: "Location");
+                name: "Locations");
         }
     }
 }

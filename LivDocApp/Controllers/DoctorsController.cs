@@ -15,11 +15,14 @@ namespace LivDocApp.Controllers
     public class DoctorsController : Controller
     {
         private readonly DoctorsDbContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public DoctorsController(DoctorsDbContext context)
+        public DoctorsController(DoctorsDbContext context, IWebHostEnvironment env)
         {
             _context = context;
+            _env = env;
         }
+        
 
         // GET: Doctors
         public async Task<IActionResult> Index()
@@ -51,7 +54,7 @@ namespace LivDocApp.Controllers
         // GET: Doctors/Create
         public IActionResult Create()
         {
-            ViewData["HospitalID"] = new SelectList(_context.Set<Hospital>(), "HospitalID", "Name");
+            ViewData["HospitalID"] = new SelectList(_context.Hospitals, "HospitalID", "Name");
             ViewData["SpecialtyID"] = new SelectList(_context.Set<Specialty>(), "SpecialtyId", "Name");
             return View();
         }
@@ -61,14 +64,26 @@ namespace LivDocApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DoctorID,Name,Experience,SpecialtyID,HospitalID,Email,PhoneNumber,DocImgURL")] Doctor doctor, IFormFile imgFile)
+        public async Task<IActionResult> Create([Bind("DoctorID,Name,Experience,SpecialtyID,HospitalID,Email,PhoneNumber")] Doctor doctor, [FromForm]  IFormFile imgFile)
         {
+            ModelState.Remove("DocImgURL");
+            ModelState.Remove("imgFile");
+            ModelState.Remove("Hospital");
+            ModelState.Remove("Specialty");
             if (ModelState.IsValid)
             {
                 Console.WriteLine("Model is valid");
                 if (imgFile != null && imgFile.Length > 0)
                 {
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "/DoctorsImg/", imgFile.FileName);
+                    var webRootPath = _env.WebRootPath;
+                    var uploadsPath = Path.Combine(webRootPath, "DoctorsImg");
+
+                    if (!Directory.Exists(uploadsPath))
+                    {
+                        Directory.CreateDirectory(uploadsPath);
+                    }
+
+                    var filePath = Path.Combine(uploadsPath, imgFile.FileName);
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         await imgFile.CopyToAsync(fileStream);
@@ -108,22 +123,31 @@ namespace LivDocApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DoctorID,Name,Experience,SpecialtyID,HospitalID,Email,PhoneNumber,DocImgURL")] Doctor doctor, IFormFile imgFile)
-        {
-            Console.WriteLine(" Edit1");
+        public async Task<IActionResult> Edit(int id, [Bind("DoctorID,Name,Experience,SpecialtyID,HospitalID,Email,PhoneNumber")] Doctor doctor, [FromForm] IFormFile imgFile)
+        {          
             if (id != doctor.DoctorID)
             {
-                Console.WriteLine(" Edit2");
-
                 return NotFound();
             }
+            ModelState.Remove("DocImgURL");
+            ModelState.Remove("imgFile");
+            ModelState.Remove("Hospital");
+            ModelState.Remove("Specialty");
 
             if (ModelState.IsValid)
             {
-                Console.WriteLine(" Edit3");
+     
                 if (imgFile != null && imgFile.Length > 0)
                 {
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "/DoctorsImg/", imgFile.FileName);
+                    var webRootPath = _env.WebRootPath;
+                    var uploadsPath = Path.Combine(webRootPath, "DoctorsImg");
+
+                    if (!Directory.Exists(uploadsPath))
+                    {
+                        Directory.CreateDirectory(uploadsPath);
+                    }
+
+                    var filePath = Path.Combine(uploadsPath, imgFile.FileName);
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         await imgFile.CopyToAsync(fileStream);
