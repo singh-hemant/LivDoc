@@ -49,26 +49,27 @@ namespace LivDocApp.Controllers
             return View("index", results);
         }
         [HttpPost]
-        public async Task<IActionResult> Book(int? id, DateTime date)
+        public IActionResult Book(int? id, DateTime date)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var doctor = await db.Doctors
+            var doctor = db.Doctors
                 .Include(d => d.Hospital)
                 .Include(d => d.Specialty)
-                .FirstOrDefaultAsync(d => d.DoctorID == id);
+                .FirstOrDefault(d => d.DoctorID == id);
 
             if (doctor == null)
             {
                 return NotFound();
             }
 
-            var appointments = await db.Appointments
-                .Where(a => a.DoctorID == id && a.AppointmentDate.ToShortDateString == date.ToShortDateString)
-                .ToListAsync();
+            DateOnly dateOnly = new DateOnly(date.Year, date.Month, date.Day);
+
+            var appointments = db.Appointments
+                .Where(a => a.DoctorID == id && a.AppointmentDate == dateOnly).ToList();
 
             var viewModel = new BookViewModel
             {
@@ -76,9 +77,10 @@ namespace LivDocApp.Controllers
                 Appointments = appointments
             };
 
-            ViewBag.Date = date.ToShortDateString();
+            ViewData["Date"] = date.ToShortDateString();
 
-            return View(viewModel);
+
+            return View("book", viewModel);
         }
 
     }

@@ -2,6 +2,12 @@
 
 @{
     ViewData["Title"] = "Book";
+    List<TimeSpan> timeSlots = new List<TimeSpan>();
+    for (int i = 9; i < 35; i++)
+    {
+        // Assuming each integer represents an hour (e.g., 0 = 00:00, 1 = 01:00, etc.)
+        timeSlots.Add(TimeSpan.FromHours(i));
+    }
 }
 
 <h1>Doctor's Details</h1>
@@ -58,33 +64,6 @@
 <hr />
 
 
-<h1>Book Appointment</h1>
-
-<p>Doctor: @Model.Doctor.Name</p>
-<p>Date: @ViewBag.Date</p>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Time Slot</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var appointment in Model.Appointments)
-        {
-            <tr>
-                <td>@appointment.TimeSlot</td>
-                <td>@appointment.Status</td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-<a asp-action="Index">Back to Doctors</a>
-
-
-
    
     <style>
       
@@ -138,23 +117,91 @@
         <div class="container">
             <h1>Book an Appointment</h1>
             <div class="calendar">
-                <button>&lt;</button>
-                <input type="date">
-                <button>&gt;</button>
+        <!-- Buttons to shift date left or right -->
+
+        <button onclick="shiftDate(-1)">&lt;</button>
+        <input type="date" id="dateInput" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="@DateTime.Now.ToString("yyyy-MM-dd")" max="@DateTime.Now.AddMonths(3).ToString("yyyy-MM-dd")" onchange="updateButtonStates()" />
+        <button onclick="shiftDate(1)">&gt;</button>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            
+            // Function to handle date selection change
+            $('#dateInput').change(function () {
+                var selectedDate = $(this).val(); // Get the selected date
+                sendDataToController(selectedDate); // Send data to controller
+            });
+
+            // Function to send data to controller via AJAX
+            function sendDataToController(selectedDate) {
+                $.ajax({
+                    url: '@Url.Action("Book", "Home")', // URL of the controller action
+                    type: 'POST',
+                    data: { id: @Model.Doctor.DoctorID, date: selectedDate }, // Data to send to the controller action
+                    success: function (response) {
+                        // Handle response from the server if needed
+                        //console.log(response);
+                       // document.body.innerHTML = '';
+                        // Refresh the page
+                       // window.location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error if needed
+                        console.error(error);
+                    }
+                });
+            }
+            
+
+           
+        </script>
+
+        <script>
+            function shiftDate(days) {
+                var dateInput = document.getElementById('dateInput');
+                var currentDate = new Date(dateInput.value);
+                currentDate.setDate(currentDate.getDate() + days);
+                dateInput.value = currentDate.toISOString().slice(0, 10); // Set new date value
+            }
+        </script>
+            <h2>@ViewData["Date"]</h2>
             </div>
-            <div class="time-slots">
-                <button class="time-slot">9:00 AM</button>
-                <button class="time-slot">10:00 AM</button>
-                <button class="time-slot">11:00 AM</button>
-                <button class="time-slot">12:00 PM</button>
-                <button class="time-slot">1:00 PM</button>
-                <button class="time-slot">2:00 PM</button>
-                <button class="time-slot">3:00 PM</button>
-                <button class="time-slot">4:00 PM</button>
-                <button class="time-slot">5:00 PM</button>
-            </div>
-        </div>
+    <div class="time-slots">
+    @foreach (var appointment in Model.Appointments)
+    {
+        @if (@appointment.TimeSlot >= 1 && @appointment.TimeSlot <= @timeSlots.Count)
+        {
+
+                <button class="time-slot" value="@appointment.TimeSlot" id="timeSlotButton_@appointment.TimeSlot">@timeSlots[@appointment.TimeSlot - 1]</button>
+
+
+        }else{
+            <button class="time-slot" disabled>Invalid Time Slot</button>
+        }
+
+
+    }
+        <script>
+            // Run this script after the buttons are rendered
+            @foreach (var appointment in Model.Appointments)
+            {
+                @if (@appointment.TimeSlot >= 1 && @appointment.TimeSlot <= @timeSlots.Count)
+                {
+                    var appointmentStatus_@appointment.TimeSlot = @appointment.Status.ToString().ToLower();
+                    var button = document.getElementById('timeSlotButton_@appointment.TimeSlot');
+                    if (appointmentStatus_@appointment.TimeSlot === 'true') {
+                        button.disabled = true;
+                        button.style.color = "red";
+                    } else
+                    {
+                        button.disabled = false;
+                    }
+                }
+            }
+        </script>
+    </div>
+     </div>
+
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to List of Doctors</a>
 </div>

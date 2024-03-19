@@ -115,7 +115,8 @@
                     <td>@result.LocationName</td>
                     <td>
                         <form asp-controller="Home" asp-action="Book" method="post">
-                            <input type="hidden" name="docID" value="@result.DoctorId" />
+                            <input type="hidden" name="id" value="@result.DoctorId" />
+                            <input type="hidden" id="date" name="date" value="@DateTime.Now.ToString("yyyy-MM-dd")">
                             <button type="submit" class=" btn btn-success selectDoctorLink">Book</button>
                         </form>
                     </td>
@@ -124,6 +125,17 @@
             }
       
         </tbody>
+        <script> 
+            window.onload = function () {
+                    var currentDate = new Date();
+                    var formattedDate = currentDate.toLocaleDateString(undefined, {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                    });
+                document.getElementById('date').value = formattedDate;
+            };
+        </script>
     </table>
 }
 
