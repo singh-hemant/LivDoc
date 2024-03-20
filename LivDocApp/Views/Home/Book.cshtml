@@ -2,12 +2,8 @@
 
 @{
     ViewData["Title"] = "Book";
-    List<TimeSpan> timeSlots = new List<TimeSpan>();
-    for (int i = 9; i < 35; i++)
-    {
-        // Assuming each integer represents an hour (e.g., 0 = 00:00, 1 = 01:00, etc.)
-        timeSlots.Add(TimeSpan.FromHours(i));
-    }
+    var serializedData = Json.Serialize(Model.Appointments);
+    
 }
 
 <h1>Doctor's Details</h1>
@@ -120,7 +116,7 @@
         <!-- Buttons to shift date left or right -->
 
         <button onclick="shiftDate(-1)">&lt;</button>
-        <input type="date" id="dateInput" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="@DateTime.Now.ToString("yyyy-MM-dd")" max="@DateTime.Now.AddMonths(3).ToString("yyyy-MM-dd")" onchange="updateButtonStates()" />
+        <input type="date" id="dateInput" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="@DateTime.Now.ToString("yyyy-MM-dd")" max="@DateTime.Now.AddMonths(3).ToString("yyyy-MM-dd")" onchange="updateButtonProperties();" />
         <button onclick="shiftDate(1)">&gt;</button>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
@@ -140,9 +136,7 @@
                     success: function (response) {
                         // Handle response from the server if needed
                         //console.log(response);
-                       // document.body.innerHTML = '';
-                        // Refresh the page
-                       // window.location.reload();
+                 
                     },
                     error: function (xhr, status, error) {
                         // Handle error if needed
@@ -150,56 +144,76 @@
                     }
                 });
             }
-            
 
-           
-        </script>
-
-        <script>
             function shiftDate(days) {
                 var dateInput = document.getElementById('dateInput');
                 var currentDate = new Date(dateInput.value);
                 currentDate.setDate(currentDate.getDate() + days);
                 dateInput.value = currentDate.toISOString().slice(0, 10); // Set new date value
             }
-        </script>
-            <h2>@ViewData["Date"]</h2>
-            </div>
-    <div class="time-slots">
-    @foreach (var appointment in Model.Appointments)
-    {
-        @if (@appointment.TimeSlot >= 1 && @appointment.TimeSlot <= @timeSlots.Count)
-        {
+            function updateButtonStates() {
+                var appointmentValues = [];
+                Model.Appointments.forEach(function (appointment) {
+                    appointmentValues.push(appointment);
+                });
 
-                <button class="time-slot" value="@appointment.TimeSlot" id="timeSlotButton_@appointment.TimeSlot">@timeSlots[@appointment.TimeSlot - 1]</button>
+                console.log(appointmentValues);
 
-
-        }else{
-            <button class="time-slot" disabled>Invalid Time Slot</button>
-        }
-
-
-    }
-        <script>
-            // Run this script after the buttons are rendered
-            @foreach (var appointment in Model.Appointments)
-            {
-                @if (@appointment.TimeSlot >= 1 && @appointment.TimeSlot <= @timeSlots.Count)
-                {
-                    var appointmentStatus_@appointment.TimeSlot = @appointment.Status.ToString().ToLower();
-                    var button = document.getElementById('timeSlotButton_@appointment.TimeSlot');
-                    if (appointmentStatus_@appointment.TimeSlot === 'true') {
-                        button.disabled = true;
-                        button.style.color = "red";
-                    } else
-                    {
-                        button.disabled = false;
-                    }
-                }
             }
         </script>
+           
+            </div>
+    <div class="time-slots" id="timeSlotsContainer">
+     
     </div>
-     </div>
+
+    <script>
+       
+
+        // Function to update button properties based on appointment status
+        function updateButtonProperties() {
+         
+            var timeSlots = @Json.Serialize(Model.TimeSlots);
+            var appointments = @Html.Raw(serializedData);
+            console.log(appointments)
+            var timeSlotsContainer = document.getElementById('timeSlotsContainer');
+            timeSlotsContainer.innerHTML = ''; // Clear existing buttons
+            let i = 0;
+            appointments.forEach(function (appointment) {
+                
+                if (appointment != null) {
+                    var button = document.createElement('button');
+                    button.classList.add('time-slot');
+                    button.value = appointment.timeSlot;
+                    button.id = 'timeSlotButton_' + appointment.TimeSlot;
+                    button.textContent = timeSlots[i];
+
+                    if (appointment.status) {
+                        button.classList.add('btn', 'btn-secondary');
+                        button.disabled = true;
+                    }
+
+                    timeSlotsContainer.appendChild(button);
+                   
+                } else {
+                    var invalidButton = document.createElement('button');
+                    invalidButton.classList.add('time-slot');
+                    invalidButton.disabled = true;
+                    invalidButton.textContent = 'Invalid Time Slot';
+                    timeSlotsContainer.appendChild(invalidButton);
+                }
+                i++;
+            });
+        }
+
+        // Call the function to update button properties
+        updateButtonProperties(@Json.Serialize(Model.Appointments));
+        
+
+       </script>
+        
+    </div>
+ 
 
 
 <div>

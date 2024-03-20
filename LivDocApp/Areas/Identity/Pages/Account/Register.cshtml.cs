@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
@@ -147,12 +149,12 @@ namespace LivDocApp.Areas.Identity.Pages.Account
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
+                        "ConfirmEmail",
                         pageHandler: null,
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                    await SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
@@ -173,6 +175,37 @@ namespace LivDocApp.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        private async Task<bool> SendEmailAsync(string email, string subject, string confirmLink)
+        {
+            try
+            {
+                // Configure the SMTP client
+                using (SmtpClient client = new SmtpClient("smtp.gmail.com"))
+                {
+                    client.Port = 587; // Set the SMTP port for your mail server
+                    client.UseDefaultCredentials = false;
+                    client.Credentials = new NetworkCredential("hemantsinghritesh@gmail.com", "grbgffyuzqengpsa");
+                    client.EnableSsl = true; // Enable SSL/TLS
+
+                    // Create the email message
+                    MailMessage message = new MailMessage();
+                    message.From = new MailAddress("sin-hem@outlook.com");
+                    message.To.Add(email);
+                    message.Subject = subject;
+                    message.Body = confirmLink;
+
+                    // Send the email
+                    await client.SendMailAsync(message);
+
+                    return true; // Email sent successfully
+                }
+            }
+            catch(Exception)
+            {
+                return false; // Failed to send email
+            }
         }
 
         private Employee CreateUser()

@@ -18,7 +18,8 @@ builder.Services.AddDbContext<DoctorsDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DoctorDbConnection")
     ));
 
-builder.Services.AddDefaultIdentity<Employee>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddDefaultIdentity<Employee>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
 var app = builder.Build();
 

@@ -51,10 +51,18 @@ namespace LivDocApp.Controllers
         [HttpPost]
         public IActionResult Book(int? id, DateTime date)
         {
+            List<TimeSpan> timeSlots = new List<TimeSpan>();
+            for (int i = 9; i < 35; i++)
+            {
+                // Assuming each integer represents an hour (e.g., 0 = 00:00, 1 = 01:00, etc.)
+                timeSlots.Add(TimeSpan.FromHours(i));
+            }
+
             if (id == null)
             {
                 return NotFound();
             }
+
 
             var doctor = db.Doctors
                 .Include(d => d.Hospital)
@@ -74,13 +82,14 @@ namespace LivDocApp.Controllers
             var viewModel = new BookViewModel
             {
                 Doctor = doctor,
-                Appointments = appointments
+                Appointments = appointments,
+                TimeSlots = timeSlots
             };
 
             ViewData["Date"] = date.ToShortDateString();
 
 
-            return View("book", viewModel);
+            return View(viewModel);
         }
 
     }
