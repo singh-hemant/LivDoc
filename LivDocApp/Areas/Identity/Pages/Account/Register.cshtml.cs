@@ -194,6 +194,7 @@ namespace LivDocApp.Areas.Identity.Pages.Account
                     message.From = new MailAddress("sin-hem@outlook.com");
                     message.To.Add(email);
                     message.Subject = subject;
+                    message.IsBodyHtml = true;
                     message.Body = confirmLink;
 
                     // Send the email

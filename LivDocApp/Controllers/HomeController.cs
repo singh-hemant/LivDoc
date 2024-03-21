@@ -1,5 +1,6 @@
 ﻿using LivDocApp.Data;
 using LivDocApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -48,7 +49,9 @@ namespace LivDocApp.Controllers
 
             return View("index", results);
         }
+        [HttpGet]
         [HttpPost]
+        [Authorize]
         public IActionResult Book(int? id, DateTime date)
         {
             List<TimeSpan> timeSlots = new List<TimeSpan>();

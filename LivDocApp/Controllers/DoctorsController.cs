@@ -9,9 +9,11 @@ using LivDocApp.Data;
 using LivDocApp.Models;
 using System.Drawing.Printing;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LivDocApp.Controllers
 {
+    [Authorize]
     public class DoctorsController : Controller
     {
         private readonly DoctorsDbContext _context;
