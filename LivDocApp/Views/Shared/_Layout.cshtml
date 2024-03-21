@@ -1,87 +1,219 @@
 ﻿
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
 
-        .navbar {
-            background-color: #f8f9fa;
-            overflow: hidden;
-            border-bottom: 1px solid #ccc;
-        }
-
-            .navbar a {
-                float: left;
-                display: block;
-                color: #333;
-                text-align: center;
-                padding: 14px 20px;
-                text-decoration: none;
-                font-size: 16px;
-            }
-
-                .navbar a:hover {
-                    background-color: #f0f0f0;
-                }
-
-                .navbar a.active {
-                    background-color: #ddd;
-                }
-    </style>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - LivDocApp</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>@ViewData["Title"] - LivDoc</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/LivDocApp.styles.css" asp-append-version="true" />
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/font-awesome.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/flaticon.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/nice-select.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/jquery-ui.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/magnific-popup.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/owl.carousel.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/slicknav.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
 </head>
 
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LivDocApp</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Offcanvas Menu Begin -->
+    <div class="offcanvas-menu-overlay"></div>
+    <div class="offcanvas-menu-wrapper">
+        <div class="offcanvas__logo">
+            <a href="./index.html"><img src="img/logo.png" alt=""></a>
+        </div>
+        <div id="mobile-menu-wrap"></div>
+        <div class="offcanvas__btn">
+            <a href="#" class="primary-btn">Appointment</a>
+        </div>
+        <ul class="offcanvas__widget">
+            <li><i class="fa fa-phone"></i> 1-677-124-44227</li>
+            <li><i class="fa fa-map-marker"></i> Los Angeles Gournadi, 1230 Bariasl</li>
+            <li><i class="fa fa-clock-o"></i> Mon to Sat 9:00am to 18:00pm</li>
+        </ul>
+        <div class="offcanvas__social">
+            <a href="#"><i class="fa fa-facebook"></i></a>
+            <a href="#"><i class="fa fa-twitter"></i></a>
+            <a href="#"><i class="fa fa-instagram"></i></a>
+            <a href="#"><i class="fa fa-dribbble"></i></a>
+        </div>
+    </div>
+
+    <!-- Offcanvas Menu End -->
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="header__top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <ul class="header__top__left">
+                            <li><i class="fa fa-phone"></i> 123-456-7890</li>
+                            <li><i class="fa fa-map-marker"></i> Lucknow, UP, India</li>
+                            <li><i class="fa fa-clock-o"></i> Everyday 9:00am to 19:00pm</li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="header__top__right">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                            <a href="#"><i class="fa fa-dribbble"></i></a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <partial name="_LoginPartial" />
-        </nav>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2">
+                    <div class="header__logo">
+                        <a asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/logo.png" alt=""></a>
+                    </div>
+                </div>
+                <div class="col-lg-10">
+                    <div class="header__menu__option">
+                        <nav class="header__menu">
+                            <ul>
+                                <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                                <li><a asp-area="" asp-controller="Home" asp-action="About"></a></li>
+                                <li><a asp-area="" asp-controller="Home" asp-action="Services">Services</a></li>
+                                <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                                <partial name="_LoginPartial" />
+                            </ul>
+                            
+                        </nav>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="canvas__open">
+                <i class="fa fa-bars"></i>
+            </div>
+        </div>
     </header>
+  
+
+    <!-- Header Section End -->
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    </body>
+
+    <!-- Footer Section Begin -->
+    <footer class="footer">
+        <div class="footer__top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-4">
+                        <div class="footer__logo">
+                            <a href="#"><img src="img/footer-logo.png" alt=""></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-8">
+                        <div class="footer__newslatter">
+                            <form action="#">
+                                <input type="text" placeholder="Email">
+                                <button type="submit" class="site-btn">Subscribe</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <div class="footer__social">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                            <a href="#"><i class="fa fa-dribbble"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="container">
-            &copy; 2024 - LivDocApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row">
+                <div class="col-lg-2 col-md-3 col-sm-6">
+                    <div class="footer__widget">
+                        <h5>Company</h5>
+                        <ul>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Departments</a></li>
+                            <li><a href="#">Find a Doctor</a></li>
+                            <li><a href="#">FAQ</a></li>
+                            <li><a href="#">News</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="footer__address">
+                        <h5>Contact Us</h5>
+                        <ul>
+                            <li><i class="fa fa-map-marker"></i>Lucknow, UP, India</li>
+                            <li><i class="fa fa-phone"></i> 123-456-7890</li>
+                            <li><i class="fa fa-envelope"></i> Support@gmail.com</li>
+                        </ul>
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+        <div class="footer__copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        <div class="footer__copyright__text">
+                            <p>Copyright &copy; <script>document.write(new Date().getFullYear());</script> All rights reserved</p>
+                        </div>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </div>
+                    <div class="col-lg-5">
+                        <ul>
+                            <li>All Rights Reserved</li>
+                            <li>Terms & Use</li>
+                            <li>Privacy Policy</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
+    <!-- Footer Section End -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Js Plugins -->
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/js/masonry.pkgd.min.js"></script>
+    <script src="~/js/jquery-ui.min.js"></script>
+    <script src="~/js/jquery.nice-select.min.js"></script>
+    <script src="~/js/jquery.slicknav.js"></script>
+    <script src="~/js/owl.carousel.min.js"></script>
+    <script src="~/js/main.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
-</body>
 
 </html>
