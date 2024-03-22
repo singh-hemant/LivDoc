@@ -33,6 +33,11 @@ namespace LivDocApp.Controllers
             return View();
         }
 
+        public IActionResult PageSearch()
+        {
+            return View();
+        }
+
 
 
         public IActionResult Search(string searchTerm)
@@ -60,7 +65,7 @@ namespace LivDocApp.Controllers
 
             List<SearchResultViewModel> results = query.ToList();
 
-            return View("index", results);
+            return View("PageSearch", results);
         }
         [HttpGet]
         [HttpPost]

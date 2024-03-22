@@ -1,69 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Home";
 }
- @model List<SearchResultViewModel>
-
-
-    <div class="search-container">
-    @using (Html.BeginForm("Search", "Home", FormMethod.Get))
-    {
-        <input type="text" name="searchTerm" class="search-box" placeholder="Search Doctor by Location, Hospital or Specialization..." />
-       <input type="submit" value="Search" class="search-button"/>
-    }
-    </div>
-
-    <div class="justify-content-center">
-        <a class="btn btn-outline-secondary" asp-controller="Doctors" asp-action="Index">See all Doctors</a>
-    </div>
-
-   
-@if (Model != null){
-<h2>Search Results</h2>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Doctor Name</th>
-                <th>Hospital</th>
-                <th>Specialty</th>
-                <th>Location</th>
-                <th>Book Appointment</th>
-            </tr>
-        </thead>
-        <tbody>
-        
-            @foreach (var result in Model)
-            {
-                <tr>
-                    <td>@result.DoctorName</td>
-                    <td>@result.HospitalName</td>
-                    <td>@result.SpecialtyName</td>
-                    <td>@result.LocationName</td>
-                    <td>
-                        <form asp-controller="Home" asp-action="Book" method="post">
-                            <input type="hidden" name="id" value="@result.DoctorId" />
-                            <input type="hidden" id="date" name="date" value="@DateTime.Now.ToString("yyyy-MM-dd")">
-                            <button type="submit" class=" btn btn-success selectDoctorLink">Book</button>
-                        </form>
-                    </td>
-                    
-                </tr>
-            }
-      
-        </tbody>
-        <script> 
-            window.onload = function () {
-                    var currentDate = new Date();
-                    var formattedDate = currentDate.toLocaleDateString(undefined, {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit'
-                    });
-                document.getElementById('date').value = formattedDate;
-            };
-        </script>
-    </table>
-}
 
 
 <!-- Hero Section Begin -->
@@ -73,8 +10,8 @@
             <div class="col-lg-6">
                 <div class="hero__text">
                     <span>Eiusmod tempor incididunt </span>
-                    <h2>Take the world's best quality Treadment</h2>
-                    <a href="#" class="primary-btn normal-btn">Contact us</a>
+                    <h2>Take the world's best quality Treatment</h2>
+                    <a asp-area="" asp-controller="Home" asp-action="PageSearch" class="primary-btn normal-btn">Book Appointment</a>
                 </div>
             </div>
         </div>
@@ -115,11 +52,11 @@
                         <div class="col-lg-6 col-md-6">
                             <div class="consultation__text__item">
                                 <div class="section-title">
-                                    <span>Welcon to Aesthetic</span>
-                                    <h2>Find Best Doctors With <b>AESTHETIC</b></h2>
+                                    <span>Welcome to LIVDOC</span>
+                                    <h2>Find Best Doctors With <b>LIVDOC</b></h2>
                                 </div>
                                 <p>
-                                    30 Years of experience in Cosmetic Surgery.Lorem ipsum dolor sit amet,
+                                    Lorem ipsum dolor sit amet,
                                     consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
                                     dolore magna aliqua.
                                 </p>
@@ -127,7 +64,7 @@
                         </div>
                         <div class="col-lg-6 col-md-6">
                             <div class="consultation__video set-bg" data-setbg="img/consultation-video.jpg">
-                                <a href="https://www.youtube.com/watch?v=PXsuI67s2AA" class="play-btn video-popup"><i class="fa fa-play"></i></a>
+                                <a href="https://www.youtube.com/watch?v=RlyPLWz-e1U" class="play-btn video-popup"><i class="fa fa-play"></i></a>
                             </div>
                         </div>
                     </div>
@@ -309,7 +246,7 @@
     </div>
 </section>
 <!-- Team Section End -->
-<!-- Gallery Begin -->
+<!-- Gallery Begin 
 <div class="gallery">
     <div class="gallery__container">
         <div class="grid-sizer"></div>
@@ -336,7 +273,7 @@
         </div>
     </div>
 </div>
-<!-- Gallery End -->
+Gallery End -->
 <!-- Latest News Begin -->
 <section class="latest spad">
     <div class="container">

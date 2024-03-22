@@ -7,13 +7,27 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <div class="header__btn">
+    <ul class="dropdown">
+        <li>
+            <a id="manage" class="primary-btn" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@UserManager.GetUserName(User)!</a>
+        </li>
+        <li>
+            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button id="logout" type="submit" class="primary-btn border-0">Logout</button>
+            </form>
+        </li>
+       
+    </ul>
+    </div>
+    <!--
+    <div class="header__btn">
     
             <a id="manage" class="primary-btn" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@UserManager.GetUserName(User)!</a>
    
         <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <button id="logout" type="submit" class="primary-btn border-0">Logout</button>
         </form>
-    </div>
+    </div> -->
 }
 else
 {

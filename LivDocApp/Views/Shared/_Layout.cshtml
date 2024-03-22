@@ -37,15 +37,16 @@
     <div class="offcanvas-menu-overlay"></div>
     <div class="offcanvas-menu-wrapper">
         <div class="offcanvas__logo">
-            <a href="./index.html"><img src="img/logo.png" alt=""></a>
+            <a class="logo" asp-area="" asp-controller="Home" asp-action="Index">LIVDOC</a>
+
         </div>
         <div id="mobile-menu-wrap"></div>
         <div class="offcanvas__btn">
             <a href="#" class="primary-btn">Appointment</a>
         </div>
         <ul class="offcanvas__widget">
-            <li><i class="fa fa-phone"></i> 1-677-124-44227</li>
-            <li><i class="fa fa-map-marker"></i> Los Angeles Gournadi, 1230 Bariasl</li>
+            <li><i class="fa fa-phone"></i> 123-456-7890</li>
+            <li><i class="fa fa-map-marker"></i> Lucknow, UP, India</li>
             <li><i class="fa fa-clock-o"></i> Mon to Sat 9:00am to 18:00pm</li>
         </ul>
         <div class="offcanvas__social">
@@ -85,7 +86,8 @@
             <div class="row">
                 <div class="col-lg-2">
                     <div class="header__logo">
-                        <a asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/logo.png" alt=""></a>
+  
+                        <a class="logo" asp-area="" asp-controller="Home" asp-action="Index">LIVDOC</a>
                     </div>
                 </div>
                 <div class="col-lg-10">
@@ -121,84 +123,99 @@
     </body>
 
     <!-- Footer Section Begin -->
-    <footer class="footer">
-        <div class="footer__top">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-4 col-md-4">
-                        <div class="footer__logo">
-                            <a href="#"><img src="img/footer-logo.png" alt=""></a>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-8">
-                        <div class="footer__newslatter">
-                            <form action="#">
-                                <input type="text" placeholder="Email">
-                                <button type="submit" class="site-btn">Subscribe</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-12">
-                        <div class="footer__social">
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-instagram"></i></a>
-                            <a href="#"><i class="fa fa-dribbble"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<footer class="footer">
+    <div class="footer__top">
         <div class="container">
             <div class="row">
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <div class="footer__widget">
-                        <h5>Company</h5>
-                        <ul>
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Departments</a></li>
-                            <li><a href="#">Find a Doctor</a></li>
-                            <li><a href="#">FAQ</a></li>
-                            <li><a href="#">News</a></li>
-                        </ul>
+                <div class="col-lg-4 col-md-4">
+                    <div class="footer__logo">
+                        <a class="logo" asp-area="" asp-controller="Home" asp-action="Index">LIVDOC</a>
                     </div>
                 </div>
-                
-                <div class="col-lg-4 col-md-6 col-sm-6">
-                    <div class="footer__address">
-                        <h5>Contact Us</h5>
-                        <ul>
-                            <li><i class="fa fa-map-marker"></i>Lucknow, UP, India</li>
-                            <li><i class="fa fa-phone"></i> 123-456-7890</li>
-                            <li><i class="fa fa-envelope"></i> Support@gmail.com</li>
-                        </ul>
+                <div class="col-lg-4 col-md-8">
+                    <div class="footer__newslatter">
+                        <form action="#">
+                            <input type="text" placeholder="Email">
+                            <button type="submit" class="site-btn">Subscribe</button>
+                        </form>
                     </div>
                 </div>
-            
-            </div>
-        </div>
-        <div class="footer__copyright">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-7">
-                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        <div class="footer__copyright__text">
-                            <p>Copyright &copy; <script>document.write(new Date().getFullYear());</script> All rights reserved</p>
-                        </div>
-                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                    </div>
-                    <div class="col-lg-5">
-                        <ul>
-                            <li>All Rights Reserved</li>
-                            <li>Terms & Use</li>
-                            <li>Privacy Policy</li>
-                        </ul>
+                <div class="col-lg-4 col-md-12">
+                    <div class="footer__social">
+                        <a href="#"><i class="fa fa-facebook"></i></a>
+                        <a href="#"><i class="fa fa-twitter"></i></a>
+                        <a href="#"><i class="fa fa-instagram"></i></a>
+                        <a href="#"><i class="fa fa-dribbble"></i></a>
                     </div>
                 </div>
             </div>
         </div>
-    </footer>
-    <!-- Footer Section End -->
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <div class="footer__widget">
+                    <h5>Company</h5>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Departments</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="PageSearch">Find a Doctor</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">News</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <div class="footer__widget">
+                    <h5>Quick links</h5>
+                    <ul>
+                        <li><a asp-area="" asp-controller="Home" asp-action="PageSearch">Cardiology</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="PageSearch">Physiotherapy</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="PageSearch">Radiology</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="PageSearch">Pediatrics</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="PageSearch">Neurology</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="PageSearch">Dermatology</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="PageSearch">Psychology</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="PageSearch">Oncology</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="footer__address">
+                    <h5>Contact Us</h5>
+                    <ul>
+                        <li><i class="fa fa-map-marker"></i> Lucknow, UP, India</li>
+                        <li><i class="fa fa-phone"></i> 123-456-7890</li>
+                        <li><i class="fa fa-envelope"></i> Support@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+    <div class="footer__copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7">
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    <div class="footer__copyright__text">
+                        <p>Copyright &copy; <script>document.write(new Date().getFullYear());</script> All rights reserved </p>
+                    </div>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                </div>
+                <div class="col-lg-5">
+                    <ul>
+                        <li>All Rights Reserved</li>
+                        <li>Terms & Use</li>
+                        <li>Privacy Policy</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Footer Section End -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

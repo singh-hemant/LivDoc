@@ -1,0 +1,71 @@
+﻿ @model List<SearchResultViewModel>
+@{
+    ViewData["Title"] = "SearchDoctor";
+}
+
+
+
+
+<div class="search-container">
+    @using (Html.BeginForm("Search", "Home", FormMethod.Get))
+    {
+        <input type="text" name="searchTerm" class="search-box" placeholder="Search Doctor by Name, Location, Hospital or Specialization..." />
+        <input type="submit" value="Search" class="search-button" />
+    }
+</div>
+
+<div class="justify-content-center">
+    <a class="btn btn-outline-secondary" asp-controller="Doctors" asp-action="Index">See all Doctors</a>
+</div>
+
+
+@if (Model != null)
+{
+    <h2>Search Results</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Doctor Name</th>
+                <th>Hospital</th>
+                <th>Specialty</th>
+                <th>Location</th>
+                <th>Book Appointment</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var result in Model)
+            {
+                <tr>
+                    <td>@result.DoctorName</td>
+                    <td>@result.HospitalName</td>
+                    <td>@result.SpecialtyName</td>
+                    <td>@result.LocationName</td>
+                    <td>
+                        <form asp-controller="Home" asp-action="Book" method="post">
+                            <input type="hidden" name="id" value="@result.DoctorId" />
+                            <input type="hidden" id="date" name="date" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                            <button type="submit" class=" btn btn-success selectDoctorLink">Book</button>
+                        </form>
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+        <script>
+            window.onload = function () {
+                var currentDate = new Date();
+                var formattedDate = currentDate.toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                });
+                document.getElementById('date').value = formattedDate;
+            };
+        </script>
+    </table>
+}
+
+
