@@ -5,7 +5,6 @@
 
 
 
-
 <div class="search-container">
     @using (Html.BeginForm("Search", "Home", FormMethod.Get))
     {
@@ -54,18 +53,17 @@
             }
 
         </tbody>
-        <script>
-            window.onload = function () {
-                var currentDate = new Date();
-                var formattedDate = currentDate.toLocaleDateString(undefined, {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit'
-                });
-                document.getElementById('date').value = formattedDate;
-            };
-        </script>
+        
     </table>
+    <script>
+        window.onload = function () {
+            var currentDate = new Date();
+            var formattedDate = currentDate.toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+            document.getElementById('date').value = formattedDate;
+        };
+    </script>
 }
-
-

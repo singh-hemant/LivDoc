@@ -67,7 +67,6 @@ namespace LivDocApp.Controllers
 
             return View("PageSearch", results);
         }
-        [HttpGet]
         [HttpPost]
         [Authorize]
         public IActionResult Book(int? id, DateTime date)
@@ -88,6 +87,7 @@ namespace LivDocApp.Controllers
             var doctor = db.Doctors
                 .Include(d => d.Hospital)
                 .Include(d => d.Specialty)
+                .Include(d => d.Hospital.Location)
                 .FirstOrDefault(d => d.DoctorID == id);
 
             if (doctor == null)

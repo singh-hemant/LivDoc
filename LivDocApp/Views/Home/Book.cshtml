@@ -6,11 +6,39 @@
     
 }
 
-<h1>Doctor's Details</h1>
+    <style>
+       
+        .container2 {
+            display: grid;
+            grid-template-columns: 4fr 1fr; /* Three columns */
+            gap: 20px;
+            padding: 20px;
+        }
 
-<div>
-    <h4>Doctor</h4>
-    <hr />
+        .column ul {
+            list-style-type: none; /* Remove dot marks */
+            padding: 0; /* Remove default padding */
+            margin: 0; /* Remove default margin */
+            text-align:left center;
+            color:#0c5d69;
+            font-size: 20px;
+
+            .column img {
+                max-width: 100%;
+                height: auto;
+            }
+
+        .column ul li {
+            margin-bottom: 25px; /* Add bottom margin between list items */
+            font-weight: bolder;
+        }
+       
+    </style>
+
+<h3>Doctor's Details</h3>
+<hr />
+<div class="container2">
+   
     <div class="justify-content-around">
     <dl class="row">
         <dt class = "col-sm-2">
@@ -19,6 +47,12 @@
         <dd class = "col-sm-10">
                 @Html.DisplayFor(model => model.Doctor.Name)
         </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Doctor.Hospital.Location.City)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Doctor.Hospital.Location.City)
+            </dd>
         <dt class = "col-sm-2">
                 @Html.DisplayNameFor(model => model.Doctor.Experience)
         </dt>
@@ -48,36 +82,26 @@
         </dt>
         <dd class = "col-sm-10">
                 @Html.DisplayFor(model => model.Doctor.PhoneNumber)
-        </dd>
+        </dd>   
+
     </dl>
     </div>
-    <div class="justify-content-around">
-        <img src="@Model.Doctor.DocImgURL" alt="Profile Pic" style="max-width: 200px; max-height: 500px;" />
-    </div>
 
+    <div>
+    <img src="@Model.Doctor.DocImgURL" alt="Profile Pic" style="max-width: 100%; max-height: 100%;" />
+
+    </div>
+    
 </div>
 
-<hr />
+
+<br />
+<br />
+<br />
 
 
    
     <style>
-      
-
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
         .calendar {
             display: flex;
             justify-content: space-between;
@@ -86,7 +110,7 @@
         }
 
             .calendar button {
-                background-color: #007bff;
+            background-color: lightseagreen;
                 color: #fff;
                 border: none;
                 padding: 10px 15px;
@@ -101,7 +125,7 @@
         }
 
         .time-slot {
-            background-color: #007bff;
+            background-color: lightseagreen;
             color: #fff;
             border: none;
             padding: 10px;
@@ -111,7 +135,8 @@
     </style>
   
         <div class="container">
-            <h1>Book an Appointment</h1>
+            <h3>Book an Appointment</h3>
+            <hr />
             <div class="calendar">
         <!-- Buttons to shift date left or right -->
 
@@ -213,9 +238,19 @@
        </script>
         
     </div>
+
+<br />
+<br />
+<br /> </hr>
+<br />
  
 
 
 <div>
-    <a asp-action="Index">Back to List of Doctors</a>
+    <h3><a asp-action="Index">Back to List of Doctors</a></h3>
 </div>
+
+<hr />
+<br />
+<br />
+<br />
