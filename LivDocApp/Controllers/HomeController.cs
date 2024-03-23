@@ -313,7 +313,7 @@ namespace LivDocApp.Controllers
             if (appointment == null)
             {
                 return NotFound(); // If appointment with specified id is not found, return a not found response
-            }
+            }       
 
             // Remove the appointment from the database
             appointment.Status = false;
@@ -321,7 +321,7 @@ namespace LivDocApp.Controllers
             appointment.PatientName = null;
             appointment.PatientPhoneNumber = null;
             db.SaveChanges();
-
+            // Ensend Cancellla\\\
             return RedirectToAction("BookinList"); // Redirect to the booking list page after cancellation
         }
     }
