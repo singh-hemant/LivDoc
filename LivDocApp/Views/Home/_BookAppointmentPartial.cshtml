@@ -1,0 +1,62 @@
+﻿@model LivDocApp.Models.BookViewModel
+
+@{
+    var serializedData = Json.Serialize(Model.Appointments);
+
+}
+<div class="time-slots2" id="timeSlotsContainer2">
+    <ul>
+        @foreach (var a in @Model.Appointments)
+        {
+            <li>@a.AppointmentID</li>
+        }
+    </ul>
+</div>
+
+<div class="time-slots" id="timeSlotsContainer">
+  
+</div>
+
+<script>
+
+
+    // Function to update button properties based on appointment status
+    function updateButtonProperties() {
+
+        var timeSlots = @Json.Serialize(Model.TimeSlots);
+        var appointments = @Html.Raw(serializedData);
+        console.log(appointments)
+        var timeSlotsContainer = document.getElementById('timeSlotsContainer');
+        timeSlotsContainer.innerHTML = ''; // Clear existing buttons
+        let i = 0;
+        appointments.forEach(function (appointment) {
+
+            if (appointment != null) {
+                var button = document.createElement('button');
+                button.classList.add('time-slot');
+                button.value = appointment.timeSlot;
+                button.id = 'timeSlotButton_' + appointment.TimeSlot;
+                button.textContent = timeSlots[i];
+
+                if (appointment.status) {
+                    button.classList.add('btn', 'btn-secondary');
+                    button.disabled = true;
+                }
+
+                timeSlotsContainer.appendChild(button);
+
+            } else {
+                var invalidButton = document.createElement('button');
+                invalidButton.classList.add('time-slot');
+                invalidButton.disabled = true;
+                invalidButton.textContent = 'Invalid Time Slot';
+                timeSlotsContainer.appendChild(invalidButton);
+            }
+            i++;
+        });
+    }
+
+    // Call the function to update button properties
+    updateButtonProperties();
+
+</script>

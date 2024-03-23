@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Book";
-    var serializedData = Json.Serialize(Model.Appointments);
     
 }
 
@@ -141,116 +140,148 @@
         <!-- Buttons to shift date left or right -->
 
         <button onclick="shiftDate(-1)">&lt;</button>
-        <input type="date" id="dateInput" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="@DateTime.Now.ToString("yyyy-MM-dd")" max="@DateTime.Now.AddMonths(3).ToString("yyyy-MM-dd")" onchange="updateButtonProperties();" />
+        <input type="date" id="dateInput" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="@DateTime.Now.ToString("yyyy-MM-dd")" max="@DateTime.Now.AddMonths(3).ToString("yyyy-MM-dd")" />
         <button onclick="shiftDate(1)">&gt;</button>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
-            
-            // Function to handle date selection change
-            $('#dateInput').change(function () {
-                var selectedDate = $(this).val(); // Get the selected date
-                sendDataToController(selectedDate); // Send data to controller
-            });
-
-            // Function to send data to controller via AJAX
-            function sendDataToController(selectedDate) {
-                $.ajax({
-                    url: '@Url.Action("Book", "Home")', // URL of the controller action
-                    type: 'POST',
-                    data: { id: @Model.Doctor.DoctorID, date: selectedDate }, // Data to send to the controller action
-                    success: function (response) {
-                        // Handle response from the server if needed
-                        //console.log(response);
-                 
-                    },
-                    error: function (xhr, status, error) {
-                        // Handle error if needed
-                        console.error(error);
-                    }
-                });
-            }
-
-            function shiftDate(days) {
-                var dateInput = document.getElementById('dateInput');
-                var currentDate = new Date(dateInput.value);
-                currentDate.setDate(currentDate.getDate() + days);
-                dateInput.value = currentDate.toISOString().slice(0, 10); // Set new date value
-            }
-            function updateButtonStates() {
-                var appointmentValues = [];
-                Model.Appointments.forEach(function (appointment) {
-                    appointmentValues.push(appointment);
-                });
-
-                console.log(appointmentValues);
-
-            }
-        </script>
-           
-            </div>
-    <div class="time-slots" id="timeSlotsContainer">
-     
-    </div>
-
-    <script>
        
-
-        // Function to update button properties based on appointment status
-        function updateButtonProperties() {
-         
-            var timeSlots = @Json.Serialize(Model.TimeSlots);
-            var appointments = @Html.Raw(serializedData);
-            console.log(appointments)
-            var timeSlotsContainer = document.getElementById('timeSlotsContainer');
-            timeSlotsContainer.innerHTML = ''; // Clear existing buttons
-            let i = 0;
-            appointments.forEach(function (appointment) {
-                
-                if (appointment != null) {
-                    var button = document.createElement('button');
-                    button.classList.add('time-slot');
-                    button.value = appointment.timeSlot;
-                    button.id = 'timeSlotButton_' + appointment.TimeSlot;
-                    button.textContent = timeSlots[i];
-
-                    if (appointment.status) {
-                        button.classList.add('btn', 'btn-secondary');
-                        button.disabled = true;
-                    }
-
-                    timeSlotsContainer.appendChild(button);
-                   
-                } else {
-                    var invalidButton = document.createElement('button');
-                    invalidButton.classList.add('time-slot');
-                    invalidButton.disabled = true;
-                    invalidButton.textContent = 'Invalid Time Slot';
-                    timeSlotsContainer.appendChild(invalidButton);
-                }
-                i++;
-            });
-        }
-
-        // Call the function to update button properties
-        updateButtonProperties(@Json.Serialize(Model.Appointments));
-        
-
-       </script>
-        
+           
+            </div>    
     </div>
 
 <br />
 <br />
 <br /> </hr>
 <br />
- 
 
+
+<div class="time-slots" id="timeSlotsContainer">
+</div>
+<br />
+<br />
+<br />
 
 <div>
-    <h3><a asp-action="Index">Back to List of Doctors</a></h3>
+    <h4><a asp-action="Index">Back to List of Doctors</a></h4>
 </div>
 
 <hr />
-<br />
-<br />
-<br />
+
+
+<script>
+    // Event delegation to handle click event for dynamically generated buttons
+    $(document).on('click', '.time-slot', function () {
+        var buttonValue = parseInt($(this).val());
+        console.log(buttonValue);
+        var buttonText = $(this).text();
+        // Display confirmation popup
+        var confirmation = confirm("Are you sure you want to book the time slot at " + buttonText + "?");
+
+        // If user confirms, send POST request to "BookTimeSlots" action
+        if (confirmation) {
+            var selectedDate = $('#dateInput').val(); // Get the selected date
+            $.ajax({
+                url: '@Url.Action("BookTimeSlot", "Home")', // URL of the controller action
+                type: 'POST',
+                data: { id: docID, date: selectedDate, timeSlot: buttonValue }, // Data to send to the controller action
+                success: function (data) {
+                    // Handle success response
+                    alert(" booked successfully");
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    // Handle error response
+                    console.error(error);
+                    alert(" booking Failed. Try Again!!");
+
+                }
+            });
+        }
+        else {
+            sendDataToController(selectedDate);
+
+        }
+
+    });
+
+
+    var selectedDate = $('#dateInput').val();
+
+    // Function to handle date selection change
+    $('#dateInput').change(function () {
+        //location.reload();
+
+        selectedDate = $(this).val(); // Get the selected date
+        sendDataToController(selectedDate); // Send data to controller
+    });
+    var docID = @Model.Doctor.DoctorID;
+
+    // Function to send data to controller via AJAX
+    function sendDataToController(selectedDate) {
+
+
+        $.ajax({
+            url: '@Url.Action("BookAppointment", "Home")', // URL of the controller action
+            type: 'GET',
+            data: { id: docID, date: selectedDate }, // Data to send to the controller action
+            success: function (data) {
+                //$('#dateInput').val(data.SelectedDate);
+                console.log(data)
+                var timeSlots = data.TimeSlots;
+                var appointments = data.Appointments;
+                var timeSlotsContainer = $('#timeSlotsContainer');
+                timeSlotsContainer.empty(); // Clear existing buttons
+                let i = 0;
+                appointments.forEach(function (appointment) {
+                    if (appointment != null) {
+                        var button = $('<button></button>', {
+                            class: 'time-slot btn btn-secondary',
+                            value: appointment.TimeSlot,
+                            title: "available",
+                            id: 'timeSlotButton_' + appointment.TimeSlot,
+                            text: timeSlots[i]
+                        });
+
+                        if (appointment.Status) {
+                            button.prop('disabled', true);
+                            button.attr('title', 'Not available');
+                            
+                        }
+
+                        timeSlotsContainer.append(button);
+
+                    } else {
+                        var invalidButton = $('<button></button>', {
+                            class: 'time-slot',
+                            disabled: true,
+                            text: 'Invalid Time Slot'
+                        });
+                        timeSlotsContainer.append(invalidButton);
+                    }
+                    i++;
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+
+    }
+
+    // Call the function to update button properties
+    sendDataToController(selectedDate);
+
+    function shiftDate(days) {
+        var dateInput = document.getElementById('dateInput');
+        var currentDate = new Date(dateInput.value);
+        if ((currentDate.getDate() + days) < dateInput.ariaValueMin || (currentDate.getDate() + days) > dateInput.ariaValueMax) {
+            console.log("Date out of range");
+        } else {
+            currentDate.setDate(currentDate.getDate() + days);
+            dateInput.value = currentDate.toISOString().slice(0, 10); // Set new date value
+        }
+            
+    }
+
+
+ 
+</script>

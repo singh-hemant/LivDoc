@@ -42,7 +42,7 @@
                     <td>@result.SpecialtyName</td>
                     <td>@result.LocationName</td>
                     <td>
-                        <form asp-controller="Home" asp-action="Book" method="post">
+                        <form asp-controller="Home" asp-action="Book" method="get">
                             <input type="hidden" name="id" value="@result.DoctorId" />
                             <input type="hidden" id="date" name="date" value="@DateTime.Now.ToString("yyyy-MM-dd")">
                             <button type="submit" class=" btn btn-success selectDoctorLink">Book</button>
