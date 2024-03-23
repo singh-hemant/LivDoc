@@ -1,0 +1,61 @@
+﻿@model BookingListModel
+@{
+    ViewData["Title"] = "Booking List";
+
+}
+
+@if (Model.Appointments.Count > 0)
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Doctor's Name</th>
+                <th>Location</th>
+                <th>Hospital</th>
+                <th>Doctor's Email</th>
+                <th>Doctor's Contact Number</th>
+                <th>Booking Date</th>
+                <th>Time Slot</th>
+                <th>Cancel Appointment</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Appointments.Count; i++)
+            {
+                <tr>
+                    <td>@Model.Appointments[i].Doctor.Name</td>
+                    <td>@Model.Appointments[i].Doctor.Hospital.Location.City</td>
+                    <td>@Model.Appointments[i].Doctor.Hospital.Name</td>
+                    <td>@Model.Appointments[i].Doctor.Email</td>
+                    <td>@Model.Appointments[i].Doctor.PhoneNumber</td>
+                    <td>@Model.Appointments[i].AppointmentDate</td>
+                    <td>@Model.TimeSlots[i]</td>
+                    <td>
+                        <form id="cancelForm-@Model.Appointments[i].AppointmentID" asp-controller="Home" asp-action="CancelBooking" method="get">
+                            <input type="hidden" name="id" value="@Model.Appointments[i].AppointmentID" />
+
+                            <button type="button" class=" btn btn-outline-danger selectDoctorLink" onclick="confirmCancel(@Model.Appointments[i].AppointmentID)">Cancel</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No appointments found.</p>
+}
+
+<script>
+    function confirmCancel(appointmentId) {
+        var confirmation = confirm("Are you sure you want to cancel this appointment?");
+                if (confirmation) {
+                    // If user confirms, submit the form
+                    document.getElementById("cancelForm-" + appointmentId).submit();
+                } else {
+                    // If user cancels, do nothing
+                    return false;
+                }
+            }
+</script>

@@ -7,6 +7,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Globalization;
+using System.Net.Mail;
+using System.Net;
+using Microsoft.AspNetCore.Identity;
 
 namespace LivDocApp.Controllers
 {
@@ -44,7 +47,7 @@ namespace LivDocApp.Controllers
         }
 
 
-
+        [Authorize]
         public IActionResult Search(string searchTerm)
         {
             var query = from doctor in db.Doctors
@@ -176,7 +179,7 @@ namespace LivDocApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult BookTimeSlot(int id, DateTime date, int timeSlot)
+        public IActionResult BookTimeSlot(int id, DateTime date, int timeSlot, string tsText)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -198,6 +201,7 @@ namespace LivDocApp.Controllers
                 var appointment = db.Appointments.FirstOrDefault(a => a.DoctorID == id &&
                                                                  a.AppointmentDate == dateOnly &&
                                                                  a.TimeSlot == timeSlot);
+               
 
                 if (appointment != null)
                 {
@@ -210,9 +214,115 @@ namespace LivDocApp.Controllers
                     // Save changes to the database
                     db.SaveChanges();
 
+                    //send booking confirmation email
+                    var doctor = db.Doctors
+                .Include(d => d.Hospital)
+                .Include(d => d.Specialty)
+                .Include(d => d.Hospital.Location)
+                .FirstOrDefault(d => d.DoctorID == id);
+
+                    var pName = userDetails.Name;
+                    var pEmail = userDetails.Email;
+                    var dname = doctor.Name;
+                    var dLoc = doctor.Hospital.Location.City;
+                    var dHos = doctor.Hospital.Name;
+                    var aptDate = appointment.AppointmentDate.ToShortDateString();
+                   
+
+
+
+                    var msgBody = $"<h4>Hello {pName},</h4>" +
+                                    $"<p>Your booking is <b>confirmed.<b/></p>" +
+                                    $"<h4>Your Booking Details: </h4>" +
+                                    $"<table border='1' width='800px' height='200px'><tr><th>Doctor Name</th><th>Location</th><th>Hospital</th><th>Date</th><th>Time Slot</th></tr>"+
+                    $"<tr><td>{dname}</td><td>{dLoc}</td><td>{dHos}</td><td>{aptDate}</td><td>{tsText}</td></tr></table>";
+
+                    SendBookingConfirmationEmail(pEmail, msgBody);
+
                 }
             }
             return RedirectToAction("BookAppointment", new { id, date});
+        }
+
+        private void SendBookingConfirmationEmail(string recipientEmail, string msgBody)
+        {
+            // Configure SMTP client
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com");
+            smtpClient.Port = 587; // Update with the appropriate port
+            smtpClient.Credentials = new NetworkCredential("hemantsinghritesh@gmail.com", "grbgffyuzqengpsa");
+            smtpClient.EnableSsl = true;
+
+            // Create MailMessage
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress("sin-hem@outlook.com");
+            mailMessage.To.Add(recipientEmail);
+            mailMessage.Subject = "Booking Confirmation";
+            mailMessage.Body = msgBody;
+            mailMessage.IsBodyHtml = true;
+
+            try
+            {
+                // Send email
+                smtpClient.Send(mailMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle exception
+                Console.WriteLine("Error sending email: " + ex.Message);
+            }
+        }
+
+        [Authorize]
+        public IActionResult BookinList()
+        {
+            List<TimeSpan> timeSlots = new List<TimeSpan>();
+            for (int i = 9; i < 35; i++)
+            {
+                // Assuming each integer represents an hour (e.g., 0 = 00:00, 1 = 01:00, etc.)
+                timeSlots.Add(TimeSpan.FromHours(i));
+            }
+
+            // Get the username of the logged-in user
+            string username = User.Identity.Name;
+
+            var userDetails = UserDb.Users.FirstOrDefault(u => u.UserName == username);
+            var appointments =  db.Appointments.Where(a => a.PatientEmail == userDetails.Email && a.Status == true).ToList();
+            var doctors = (from appointment in appointments
+                           join doctor in db.Doctors.Include(d => d.Hospital).Include(d => d.Specialty).Include(d => d.Hospital.Location) on appointment.DoctorID equals doctor.DoctorID
+                           select doctor).Distinct().ToList();
+
+
+            var viewModel = new BookingListModel
+            {
+                Appointments = appointments,
+                Doctors = doctors,
+                TimeSlots = timeSlots
+            };
+            return View(viewModel);
+        }
+
+        public IActionResult CancelBooking(int? id)
+        {
+            if (id == null)
+            {
+                return BadRequest(); // If id is null, return a bad request response
+            }
+
+            var appointment = db.Appointments.FirstOrDefault(a => a.AppointmentID == id);
+
+            if (appointment == null)
+            {
+                return NotFound(); // If appointment with specified id is not found, return a not found response
+            }
+
+            // Remove the appointment from the database
+            appointment.Status = false;
+            appointment.PatientEmail = null;
+            appointment.PatientName = null;
+            appointment.PatientPhoneNumber = null;
+            db.SaveChanges();
+
+            return RedirectToAction("BookinList"); // Redirect to the booking list page after cancellation
         }
     }
 }

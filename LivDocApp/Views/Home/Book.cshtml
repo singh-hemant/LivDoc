@@ -140,7 +140,9 @@
         <!-- Buttons to shift date left or right -->
 
         <button onclick="shiftDate(-1)">&lt;</button>
-        <input type="date" id="dateInput" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="@DateTime.Now.ToString("yyyy-MM-dd")" max="@DateTime.Now.AddMonths(3).ToString("yyyy-MM-dd")" />
+        
+        <input type="date" id="dateInput" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="@DateTime.Now.ToString("yyyy-MM-dd")" max="@DateTime.Now.AddMonths(3).ToString("yyyy-MM-dd")" class="calender" >
+     
         <button onclick="shiftDate(1)">&gt;</button>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
        
@@ -161,7 +163,7 @@
 <br />
 
 <div>
-    <h4><a asp-action="Index">Back to List of Doctors</a></h4>
+    <h5><a asp-action="Search" asp-controller="Home">Back to List of Doctors</a></h5>
 </div>
 
 <hr />
@@ -182,7 +184,7 @@
             $.ajax({
                 url: '@Url.Action("BookTimeSlot", "Home")', // URL of the controller action
                 type: 'POST',
-                data: { id: docID, date: selectedDate, timeSlot: buttonValue }, // Data to send to the controller action
+                data: { id: docID, date: selectedDate, timeSlot: buttonValue, tsText: buttonText }, // Data to send to the controller action
                 success: function (data) {
                     // Handle success response
                     alert(" booked successfully");
@@ -197,7 +199,7 @@
             });
         }
         else {
-            sendDataToController(selectedDate);
+            location.reload();
 
         }
 
@@ -281,7 +283,5 @@
         }
             
     }
-
-
  
 </script>
