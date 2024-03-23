@@ -1,8 +1,12 @@
 {
   "dependencies": {
-    "mssql1": {
+    "mssql2": {
       "type": "mssql",
-      "connectionId": "ConnectionStrings:DoctorsDbContext"
+      "connectionId": "ConnectionStrings:DefaultConnection"
+    },
+    "mssql3": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:DoctorDbConnection"
     }
   }
 }

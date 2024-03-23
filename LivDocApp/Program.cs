@@ -6,8 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<DoctorsDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DoctorsDbContext") ?? throw new InvalidOperationException("Connection string 'DoctorsDbContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
