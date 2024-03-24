@@ -19,6 +19,7 @@ builder.Services.AddDbContext<DoctorsDbContext>(options => options.UseSqlServer(
 builder.Services.AddDefaultIdentity<Employee>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -3,6 +3,19 @@
     ViewData["Title"] = "Booking List";
 
 }
+<div class="two-columns" style="display: flex; flex-direction: row; justify-content: space-between;">
+    <div class="column">
+        <h4> Your Bookings: </h4>
+    </div>
+    <div class="column">
+        <a asp-area="" asp-controller="Home" asp-action="PageSearch" class="primary-btn normal-btn">Book Appointment</a>
+
+    </div>
+</div>
+</hr>
+<br />
+<br />
+<br />
 
 @if (Model.Appointments.Count > 0)
 {
@@ -33,6 +46,7 @@
                     <td>
                         <form id="cancelForm-@Model.Appointments[i].AppointmentID" asp-controller="Home" asp-action="CancelBooking" method="get">
                             <input type="hidden" name="id" value="@Model.Appointments[i].AppointmentID" />
+                            <input type="hidden" name="timeSlot" value="@Model.TimeSlots[i]" />
 
                             <button type="button" class=" btn btn-outline-danger selectDoctorLink" onclick="confirmCancel(@Model.Appointments[i].AppointmentID)">Cancel</button>
                         </form>
@@ -53,6 +67,7 @@ else
                 if (confirmation) {
                     // If user confirms, submit the form
                     document.getElementById("cancelForm-" + appointmentId).submit();
+                    alert("Your appointment has been cancelled.");
                 } else {
                     // If user cancels, do nothing
                     return false;

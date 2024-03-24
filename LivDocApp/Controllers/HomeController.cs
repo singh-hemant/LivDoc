@@ -10,6 +10,10 @@ using System.Globalization;
 using System.Net.Mail;
 using System.Net;
 using Microsoft.AspNetCore.Identity;
+using Twilio.Types;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace LivDocApp.Controllers
 {
@@ -17,11 +21,13 @@ namespace LivDocApp.Controllers
     {
         private readonly DoctorsDbContext db;
         private readonly ApplicationDbContext UserDb;
+        private readonly IConfiguration _configuration;
 
-        public HomeController(DoctorsDbContext context, ApplicationDbContext context1)
+        public HomeController(DoctorsDbContext context, ApplicationDbContext context1, IConfiguration configuration)
         {
             db = context;
             UserDb = context1;
+            _configuration = configuration;
         }
         public IActionResult Index()
         {
@@ -227,24 +233,31 @@ namespace LivDocApp.Controllers
                     var dLoc = doctor.Hospital.Location.City;
                     var dHos = doctor.Hospital.Name;
                     var aptDate = appointment.AppointmentDate.ToShortDateString();
-                   
 
 
 
+                    var subject = "Booking Confirmation";
                     var msgBody = $"<h4>Hello {pName},</h4>" +
                                     $"<p>Your booking is <b>confirmed.<b/></p>" +
                                     $"<h4>Your Booking Details: </h4>" +
                                     $"<table border='1' width='800px' height='200px'><tr><th>Doctor Name</th><th>Location</th><th>Hospital</th><th>Date</th><th>Time Slot</th></tr>"+
                     $"<tr><td>{dname}</td><td>{dLoc}</td><td>{dHos}</td><td>{aptDate}</td><td>{tsText}</td></tr></table>";
 
-                    SendBookingConfirmationEmail(pEmail, msgBody);
+                    var msgBody2 = $"Hello {pName}\n" +
+                                    $"Your booking is confirmed.\n" +
+                                    $"Your Booking Details: >" +
+                                    $"Doctor Name:{dname}\n Location: {dLoc}\nHospital: {dHos}\nDate: {aptDate}\nTime Slot: {tsText}";
+
+                    SendEmail(subject, pEmail, msgBody);
+
+                    SendSms(userDetails.PhoneNumber, msgBody2);
 
                 }
             }
             return RedirectToAction("BookAppointment", new { id, date});
         }
 
-        private void SendBookingConfirmationEmail(string recipientEmail, string msgBody)
+        private void SendEmail(string subject, string recipientEmail, string msgBody)
         {
             // Configure SMTP client
             SmtpClient smtpClient = new SmtpClient("smtp.gmail.com");
@@ -256,7 +269,7 @@ namespace LivDocApp.Controllers
             MailMessage mailMessage = new MailMessage();
             mailMessage.From = new MailAddress("sin-hem@outlook.com");
             mailMessage.To.Add(recipientEmail);
-            mailMessage.Subject = "Booking Confirmation";
+            mailMessage.Subject = subject;
             mailMessage.Body = msgBody;
             mailMessage.IsBodyHtml = true;
 
@@ -270,6 +283,27 @@ namespace LivDocApp.Controllers
                 // Handle exception
                 Console.WriteLine("Error sending email: " + ex.Message);
             }
+        }
+
+
+        private void SendSms(string to, string message)
+        {
+            var accountSid =  _configuration["Twilio:AccountSid"];
+            var authToken = _configuration["Twilio:AuthToken"];
+            var twilioPhoneNumber = _configuration["Twilio:PhoneNumber"];
+
+
+
+            TwilioClient.Init(accountSid, authToken);
+
+            var toPhoneNumber = new PhoneNumber(to);
+            var messageOptions = new CreateMessageOptions(toPhoneNumber)
+            {
+                From = new PhoneNumber(twilioPhoneNumber),
+                Body = message
+            };
+
+            MessageResource.Create(messageOptions);
         }
 
         [Authorize]
@@ -301,7 +335,7 @@ namespace LivDocApp.Controllers
             return View(viewModel);
         }
 
-        public IActionResult CancelBooking(int? id)
+        public IActionResult CancelBooking(int? id, string timeSlot)
         {
             if (id == null)
             {
@@ -313,7 +347,18 @@ namespace LivDocApp.Controllers
             if (appointment == null)
             {
                 return NotFound(); // If appointment with specified id is not found, return a not found response
-            }       
+            }
+
+            // Get the username of the logged-in user
+            string username = User.Identity.Name;
+
+            // Retrieve user details using LINQ or any other method
+
+            var userDetails = UserDb.Users.FirstOrDefault(u => u.UserName == username);
+            var pName = userDetails.Name;
+            var pPN = userDetails.PhoneNumber;
+            var pEmail = userDetails.Email;
+
 
             // Remove the appointment from the database
             appointment.Status = false;
@@ -321,7 +366,20 @@ namespace LivDocApp.Controllers
             appointment.PatientName = null;
             appointment.PatientPhoneNumber = null;
             db.SaveChanges();
-            // Ensend Cancellla\\\
+            // Send Cancellation email
+            var subject = "Appointment cancellation information";
+            var msgBody = $"<h4>Hello {pName},</h4>" +
+                            $"<h5>Your Appointment on {appointment.AppointmentDate} at {timeSlot} has been <b>Cancelled.<b/></h5>";
+                     
+
+            var msgBody2 = $"Hello {pName},\n" +
+                            $"Your Appointment on {appointment.AppointmentDate} at {timeSlot} has been <b>Cancelled.";
+
+
+            SendEmail(subject, pEmail, msgBody);
+
+            SendSms(userDetails.PhoneNumber, msgBody2);
+
             return RedirectToAction("BookinList"); // Redirect to the booking list page after cancellation
         }
     }

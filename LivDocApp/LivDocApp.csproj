@@ -18,10 +18,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
+    <PackageReference Include="Twilio" Version="7.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="Properties\ServiceDependencies\" />
   </ItemGroup>
 
 </Project>

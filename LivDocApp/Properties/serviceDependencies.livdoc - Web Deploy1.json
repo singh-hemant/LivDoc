@@ -3,19 +3,14 @@
     "mssql2": {
       "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/livdoc/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsDefaultConnection_3FDF2EE67F",
       "secretStore": "AzureAppSettings",
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/employee-db-server/databases/Employee-db",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/employee-db-server/databases/db-employees",
       "type": "mssql.azure",
       "connectionId": "ConnectionStrings:DefaultConnection"
-    },
-    "mssql1": {
-      "ignored": "true",
-      "type": "mssql",
-      "connectionId": "ConnectionStrings:DoctorsDbContext"
     },
     "mssql3": {
       "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/livdoc/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsDoctorDbConnection_6024966FFA",
       "secretStore": "AzureAppSettings",
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/employee-db-server/databases/Doctors-db",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/employee-db-server/databases/db-doctors",
       "type": "mssql.azure",
       "connectionId": "ConnectionStrings:DoctorDbConnection"
     }
