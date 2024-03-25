@@ -14,6 +14,8 @@ using Twilio.Types;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Azure.Communication.Sms;
+
 
 namespace LivDocApp.Controllers
 {
@@ -34,18 +36,12 @@ namespace LivDocApp.Controllers
             return View();
         }
 
-        public IActionResult About()
-        {
-            return View();
-        }
+       
         public IActionResult Services()
         {
             return View();
         }
-        public IActionResult Contact()
-        {
-            return View();
-        }
+      
 
         public IActionResult PageSearch()
         {
@@ -54,7 +50,8 @@ namespace LivDocApp.Controllers
 
 
         [Authorize]
-        public IActionResult Search(string searchTerm)
+        [HttpGet]
+        public ActionResult Search(string searchTerm)
         {
             var query = from doctor in db.Doctors
                         join location in db.Locations on doctor.Hospital.LocationID equals location.LocationId into locationGroup
@@ -79,7 +76,10 @@ namespace LivDocApp.Controllers
 
             List<SearchResultViewModel> results = query.ToList();
 
-            return View("PageSearch", results);
+            string jsonViewModel = JsonConvert.SerializeObject(results);
+
+            // Return JSON result
+            return Content(jsonViewModel, "application/json");
         }
         [HttpGet]
         [Authorize]
@@ -288,6 +288,7 @@ namespace LivDocApp.Controllers
 
         private void SendSms(string to, string message)
         {
+            
             var accountSid =  _configuration["Twilio:AccountSid"];
             var authToken = _configuration["Twilio:AuthToken"];
             var twilioPhoneNumber = _configuration["Twilio:PhoneNumber"];
@@ -302,9 +303,46 @@ namespace LivDocApp.Controllers
                 From = new PhoneNumber(twilioPhoneNumber),
                 Body = message
             };
+            try
+            {
+                MessageResource.Create(messageOptions);
 
-            MessageResource.Create(messageOptions);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+           
+
+            /*
+            string connectionString = "endpoint=https://livdoc-sms.india.communication.azure.com/;accesskey=hromRfeuZsRpRy7p7UrBGzE9yQwl7oacFqlu0w0mbE1CSaONUFr0bnvsaGNoJxU4z8X5wTlCUe7EC1KvMWO9sA==";
+
+            // Replace these with your actual phone numbers
+            string fromPhoneNumber = "+91831805397";
+            string toPhoneNumber = to;
+
+            // Message content
+            string msg = message;
+
+            // Initialize the SmsClient
+            var client = new SmsClient(connectionString);
+
+            // Send the SMS message
+            SmsSendResult response = client.Send(fromPhoneNumber, toPhoneNumber, message);
+
+            // Handle the response
+            if (response.Successful)
+            {
+                Console.WriteLine("SMS message sent successfully!");
+            }
+            else
+            {
+                Console.WriteLine($"Failed to send SMS message. Error: {response.ErrorMessage}");
+            }
+            */
+
         }
+    
 
         [Authorize]
         public IActionResult BookinList()

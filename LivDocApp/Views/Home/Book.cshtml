@@ -275,13 +275,22 @@
     function shiftDate(days) {
         var dateInput = document.getElementById('dateInput');
         var currentDate = new Date(dateInput.value);
-        if ((currentDate.getDate() + days) < dateInput.ariaValueMin || (currentDate.getDate() + days) > dateInput.ariaValueMax) {
+
+        // Calculate the new date by adding the specified number of days
+        var newDate = new Date(currentDate.getTime() + days * 24 * 60 * 60 * 1000);
+
+        // Check if the new date is within the allowed range
+        var minDate = new Date(dateInput.min);
+        var maxDate = new Date(dateInput.max);
+        if (newDate < minDate || newDate > maxDate) {
             console.log("Date out of range");
         } else {
-            currentDate.setDate(currentDate.getDate() + days);
-            dateInput.value = currentDate.toISOString().slice(0, 10); // Set new date value
+            // Set the new date value in the input field
+            dateInput.value = newDate.toISOString().slice(0, 10);
         }
-            
+
+        // Call the function to send data to the controller (assuming this function is defined elsewhere)
+        sendDataToController(dateInput.value);
     }
  
 </script>

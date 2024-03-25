@@ -5,65 +5,213 @@
 
 
 
-<div class="search-container">
-    @using (Html.BeginForm("Search", "Home", FormMethod.Get))
-    {
-        <input type="text" name="searchTerm" class="search-box" placeholder="Search Doctor by Name, Location, Hospital or Specialization..." />
-        <input type="submit" value="Search" class="search-button" />
-    }
+<div class="search-container" min-height="400vh">
+   
+        <input type="text" id="searchTerm" name="searchTerm" class="search-box" placeholder="Search Doctor by Name, Location, Hospital or Specialization..." />
+    <div id="searchResults"></div>
 </div>
+
 
 <div class="justify-content-center">
     <a class="btn btn-outline-secondary" asp-controller="Doctors" asp-action="Index">See all Doctors</a>
 </div>
 
+<h3>Search Results</h3>
+<br />
 
-@if (Model != null)
-{
-    <h2>Search Results</h2>
+<!--
+<style>
+    .container3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Doctor Name</th>
-                <th>Hospital</th>
-                <th>Specialty</th>
-                <th>Location</th>
-                <th>Book Appointment</th>
-            </tr>
-        </thead>
-        <tbody>
+    .column1 {
+        display: flex;
+        flex-direction: column;
+    }
 
-            @foreach (var result in Model)
-            {
-                <tr>
-                    <td>@result.DoctorName</td>
-                    <td>@result.HospitalName</td>
-                    <td>@result.SpecialtyName</td>
-                    <td>@result.LocationName</td>
-                    <td>
-                        <form asp-controller="Home" asp-action="Book" method="get">
-                            <input type="hidden" name="id" value="@result.DoctorId" />
-                            <input type="hidden" id="date" name="date" value="@DateTime.Now.ToString("yyyy-MM-dd")">
-                            <button type="submit" class=" btn btn-outline-success selectDoctorLink">Book</button>
-                        </form>
-                    </td>
+    label {
+        margin-bottom: 5px;
+    }
 
-                </tr>
-            }
+    select {
+        width: 100%;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
 
-        </tbody>
+</style>
+<div class="container3">
+    <div class="column1">
+        <label for="locationFilter">Filter</label>
+    </div>
+    <div class="column1">
+        <select id="locationFilter" style="display:block;">
+            <option value="">All Locations</option>
         
-    </table>
-    <script>
-        window.onload = function () {
-            var currentDate = new Date();
-            var formattedDate = currentDate.toLocaleDateString(undefined, {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
+        </select>
+    </div>
+   
+    <div class="column1">
+        <select id="specialtyFilter" style="display:block;">
+            <option value="">All Specialties</option>
+         
+        </select>
+    </div>
+</div> -->
+<br />
+<br />
+
+
+<table class="table" id="doctorsTable">
+    <thead>
+        <tr>
+            <th>Doctor Name</th>
+            <th>Hospital</th>
+            <th>Specialty</th>
+            <th>Location</th>
+            <th>Book Appointment</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+
+        </tr>
+
+    </tbody>
+
+</table>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    var doctors = null;
+    // for getting full data from action 'Search'
+    $(document).ready(function () {
+       
+        $('#searchTerm').on('input', function () {
+            var searchTerm = $(this).val();
+
+            // Perform AJAX request to fetch search results
+            $.ajax({
+                url: '@Url.Action("Search", "Home")',
+                type: 'GET',
+                data: { searchTerm: searchTerm },
+                success: function (data) {
+                    console.log(data);
+                    populateTable(data);
+                    doctors = data;
+                    FillFilterOptions();
+                },
+                error: function () {
+                    console.error('Error fetching search results.');
+                }
             });
-            document.getElementById('date').value = formattedDate;
-        };
-    </script>
-}
+        });
+  
+        
+
+        var locationFilter = document.getElementById("locationFilter");
+        var specialtyFilter = document.getElementById("specialtyFilter");
+        var doctorsTable = document.getElementById("doctorsTable").getElementsByTagName("tbody")[0];
+
+        locationFilter.addEventListener("change", function () {
+            filterDoctors();
+        });
+
+        specialtyFilter.addEventListener("change", function () {
+            filterDoctors();
+        });
+
+        function filterDoctors() {
+            var location = locationFilter.value;
+            var specialty = specialtyFilter.value;
+
+            // Clear existing table rows
+            doctorsTable.innerHTML = "";
+
+            // Filter doctors based on location and specialty
+            var filteredDoctors = doctors.filter(function (doctor) {
+                return (location === "" || doctor.LocationName === location) &&
+                    (specialty === "" || doctor.SpecialtyName === specialty);
+
+            });
+
+            populateTable(doctors)
+        }
+    });
+
+    function FillFilterOptions() {
+
+        var locationFilter = document.getElementById("locationFilter");
+        var specialtyFilter = document.getElementById("specialtyFilter");
+
+
+        var uniqueLocations = [];
+        var uniqueSpecialties = [];
+
+        // Extract unique location and specialty values
+        doctors.forEach(function (doctor) {
+            if (!uniqueLocations.includes(doctor.LocationName)) {
+                uniqueLocations.push(doctor.LocationName);
+            }
+            if (!uniqueSpecialties.includes(doctor.SpecialtyName)) {
+                uniqueSpecialties.push(doctor.SpecialtyName);
+            }
+        });
+
+        // Populate location filter dropdown
+        uniqueLocations.forEach(function (location) {
+            var option = document.createElement("option");
+            option.value = location;
+            option.text = location;
+            locationFilter.appendChild(option);
+            console.log(location);
+
+        });
+
+        // Populate specialty filter dropdown
+        uniqueSpecialties.forEach(function (specialty) {
+            var option = document.createElement("option");
+            option.setAttribute('text', specialty);
+            option.setAttribute('value', specialty);
+            specialtyFilter.appendChild(option);
+            console.log(specialty);
+
+
+        });
+    }
+
+
+
+    function populateTable(data) {
+        doctorsTable.innerHTML = "";
+
+        data.forEach(function (doctor) {
+            var row = doctorsTable.insertRow();
+            row.insertCell(0).textContent = doctor.DoctorName;
+            row.insertCell(1).textContent = doctor.HospitalName;
+            row.insertCell(2).textContent = doctor.SpecialtyName;
+            row.insertCell(3).textContent = doctor.LocationName;
+            var actionCell = row.insertCell(4);
+            actionCell.innerHTML =
+                '<form action="/Home/Book" method="get">'
+                + '<input type="hidden" name="id" value="' + doctor.DoctorId + '" />'
+                + '<input type="hidden" id="date" name="date" value="' + new Date().toISOString().split('T')[0] + '" />'
+                + '<button type="submit" class="btn btn-outline-success selectDoctorLink">Book</button>'
+                + '</form>';
+                       
+        });
+    }
+
+
+
+</script>

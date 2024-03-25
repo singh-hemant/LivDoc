@@ -34,7 +34,7 @@
 
 html,
 body {
-	height: 100%;
+	min-height: 100vh;
 	font-family: "Poppins", sans-serif;
 	-webkit-font-smoothing: antialiased;
 }
@@ -929,7 +929,7 @@ ol {
 .footer {
 	background: #121c1d;
 	padding-top: 40px;
-	
+	position: sticky;
 }
 
 .footer__top {
