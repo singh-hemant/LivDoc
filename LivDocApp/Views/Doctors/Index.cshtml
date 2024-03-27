@@ -1,77 +1,173 @@
-﻿@model IEnumerable<LivDocApp.Models.Doctor>
+﻿
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "All Doctors";
+    var doctors = ViewData["Doctors"] as string;
 }
+<div id="doctorsList">
+    <!-- Embed JSON data within a script tag -->
+    <script id="doctors" type="application/json">
+        @Html.Raw(doctors)
+        
+    </script>
+</div>
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Experience)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Specialty)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Hospital)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Hospital.Location.City)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhoneNumber)
-            </th>
-            <th>
-                Profile Pic
-            </th>
-            <th>Change Data</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Experience)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Specialty.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Hospital.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Hospital.Location.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhoneNumber)
-            </td>
-            <td>
-                <img src="@item.DocImgURL" alt="Profile Pic" style="max-width: 100px; max-height: 100px;" />
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.DoctorID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.DoctorID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.DoctorID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<h3>List of Doctors</h3>
+</hr>
+
+<style>
+    .container3 {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+
+    .column1 {
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        margin-bottom: 5px;
+    }
+
+    select {
+        width: 100%;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+</style>
+<div class="container3">
+    <div class="column2">
+        <a class="btn btn-outline-success" asp-action="Create">Create New</a>
+    </div>
+    <div class="column1">
+        <label>Filters: </label>
+    </div>
+    <div class="column1">
+        <select id="locationFilter" style="display:block;" onchange="filterDoctors();">
+            <option value="">All Locations</option>
+
+        </select>
+    </div>
+
+    <div class="column1">
+        <select id="specialtyFilter" style="display:block;" onchange="filterDoctors();">
+            <option value="">All Specialties</option>
+
+        </select>
+    </div>
+</div>
+<br />
+
+<div id="tableContainer" style="text-align:center;"></div>
+    
+
+
+
+<script>  
+    var doctors = JSON.parse(document.getElementById("doctors").textContent);
+   
+    populateTable(doctors);
+    FillFilterOptions();
+
+    function FillFilterOptions() {
+
+        var locationFilter = document.getElementById("locationFilter");
+        var specialtyFilter = document.getElementById("specialtyFilter");
+
+
+        var uniqueLocations = [];
+        var uniqueSpecialties = [];
+
+        // Extract unique location and specialty values
+        doctors.forEach(function (doctor) {
+            if (!uniqueLocations.includes(doctor.Hospital.Location.City)) {
+                uniqueLocations.push(doctor.Hospital.Location.City);
+            }
+            if (!uniqueSpecialties.includes(doctor.Specialty.Name)) {
+                uniqueSpecialties.push(doctor.Specialty.Name);
+            }
+        });
+        // Populate location filter dropdown
+        uniqueLocations.forEach(function (location) {
+            var option = document.createElement("option");
+            option.value = location;
+            option.text = location;
+            locationFilter.appendChild(option);
+            
+
+        });
+
+        // Populate specialty filter dropdown
+        uniqueSpecialties.forEach(function (specialty) {
+            var option = document.createElement("option");
+            option.value = specialty;
+            option.text = specialty;
+            specialtyFilter.appendChild(option);
+           
+
+        });
+       
+
+    }
+
+    function filterDoctors() {
+       
+        var location = locationFilter.value;
+        var specialty = specialtyFilter.value;
+
+        // Filter doctors based on location and specialty
+        var filteredDoctors = doctors.filter(function (doctor) {
+            return (location === "" || doctor.Hospital.Location.City === location) &&
+                (specialty === "" || doctor.Specialty.Name === specialty);
+
+        });
+        populateTable(filteredDoctors)
+
+        FillFilterOptions();
+    }
+
+
+        function populateTable(data) {
+        // Clear existing table rows
+        var tableContainer = document.getElementById("tableContainer");
+
+        tableContainer.innerHTML = "";
+            
+            if (data.length > 0) {
+
+
+                var doctorsTable = '<table class="table" id="doctorsTable">';
+            doctorsTable += '<thead><tr><th>Doctor Name</th><th>Experience</th><th>Hospital</th><th>Specialty</th><th>Location</th><th>Change Data</th></tr></thead>';
+                doctorsTable += '<tbody>';
+
+
+                data.forEach(function (doctor) {
+                    doctorsTable += '<tr>';
+                    doctorsTable += '<td>' + doctor.Name + '</td>';
+                    doctorsTable += '<td>' + doctor.Experience + '</td>';
+                    doctorsTable += '<td>' + doctor.Hospital.Name + '</td>';
+                    doctorsTable += '<td>' + doctor.Specialty.Name + '</td>';
+                    doctorsTable += '<td>' + doctor.Hospital.Location.City + '</td>';
+                doctorsTable += '<td><a href="/Doctors/Edit/' + doctor.DoctorID + '">Edit</a> |'
+                    + '<a href="/Doctors/Details/' + doctor.DoctorID + '" > Details </a> |'
+                    + '<a href="/Doctors/Delete/' + doctor.DoctorID + '" > Delete </a></td>';
+                doctorsTable += '</tr>';
+                });
+                doctorsTable += '</tbody></table>';
+             
+                tableContainer.innerHTML = doctorsTable;
+            }
+            else {
+                var dataNotFound = '<h4>No Data Found</h4>';
+                dataNotFound += '<p>Try different Keywords</p>';
+          
+                tableContainer.innerHTML = dataNotFound;
+            }
+        }
+
+</script>

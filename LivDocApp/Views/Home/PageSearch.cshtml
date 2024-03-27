@@ -5,18 +5,15 @@
 
 
 
-<div class="search-container" min-height="400vh">
-   
-        <input type="text" id="searchTerm" name="searchTerm" class="search-box" placeholder="Search Doctor by Name, Location, Hospital or Specialization..." />
+<div class="search-container justify-content-center" min-height="400vh">
+    
+        <a class="btn btn-outline-success" asp-controller="Doctors" asp-action="Index">See all Doctors</a>
+            <span></span>
+     <input type="text" id="searchTerm" name="searchTerm" class="search-box" placeholder="Search Doctor by Name, Location, Hospital or Specialization..." />
     <div id="searchResults"></div>
 </div>
 
 
-<div class="justify-content-center">
-    <a class="btn btn-outline-secondary" asp-controller="Doctors" asp-action="Index">See all Doctors</a>
-</div>
-
-<h3>Search Results</h3>
 <br />
 
 <!--
@@ -65,30 +62,8 @@
 <br />
 <br />
 
+<div id="tableContainer" style="text-align:center;"></div>
 
-<table class="table" id="doctorsTable">
-    <thead>
-        <tr>
-            <th>Doctor Name</th>
-            <th>Hospital</th>
-            <th>Specialty</th>
-            <th>Location</th>
-            <th>Book Appointment</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-
-        </tr>
-
-    </tbody>
-
-</table>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -96,6 +71,7 @@
     var doctors = null;
     // for getting full data from action 'Search'
     $(document).ready(function () {
+    
        
         $('#searchTerm').on('input', function () {
             var searchTerm = $(this).val();
@@ -106,7 +82,8 @@
                 type: 'GET',
                 data: { searchTerm: searchTerm },
                 success: function (data) {
-                    console.log(data);
+                    console.log(data)
+                   
                     populateTable(data);
                     doctors = data;
                     FillFilterOptions();
@@ -145,7 +122,7 @@
 
             });
 
-            populateTable(doctors)
+            populateTable(filteredDoctors)
         }
     });
 
@@ -193,23 +170,39 @@
 
 
     function populateTable(data) {
-        doctorsTable.innerHTML = "";
+       
+        if (data.length > 0) {
+         
 
-        data.forEach(function (doctor) {
-            var row = doctorsTable.insertRow();
-            row.insertCell(0).textContent = doctor.DoctorName;
-            row.insertCell(1).textContent = doctor.HospitalName;
-            row.insertCell(2).textContent = doctor.SpecialtyName;
-            row.insertCell(3).textContent = doctor.LocationName;
-            var actionCell = row.insertCell(4);
-            actionCell.innerHTML =
-                '<form action="/Home/Book" method="get">'
-                + '<input type="hidden" name="id" value="' + doctor.DoctorId + '" />'
-                + '<input type="hidden" id="date" name="date" value="' + new Date().toISOString().split('T')[0] + '" />'
-                + '<button type="submit" class="btn btn-outline-success selectDoctorLink">Book</button>'
-                + '</form>';
-                       
-        });
+            var doctorsTable = '<h3>Search Results</h3>';
+            doctorsTable = '<table class="table" id="doctorsTable">';
+            doctorsTable += '<thead><tr><th>Doctor Name</th><th>Hospital</th><th>Specialty</th><th>Location</th><th>Book Appointment</th></tr></thead>';
+            doctorsTable += '<tbody>';
+
+
+            data.forEach(function (doctor) {
+                doctorsTable += '<tr>';
+                doctorsTable += '<td>' + doctor.DoctorName + '</td>';
+                doctorsTable += '<td>' + doctor.HospitalName + '</td>';
+                doctorsTable += '<td>' + doctor.SpecialtyName + '</td>';
+                doctorsTable += '<td>' + doctor.LocationName + '</td>';
+                doctorsTable += '<td><form action="/Home/Book" method="get">'
+                    + '<input type="hidden" name="id" value="' + doctor.DoctorId + '" />'
+                    + '<input type="hidden" id="date" name="date" value="' + new Date().toISOString().split('T')[0] + '" />'
+                    + '<button type="submit" class="btn btn-outline-success selectDoctorLink">Book</button>'
+                    + '</form></td>';
+                doctorsTable += '</tr>';
+            });
+            doctorsTable += '</tbody></table>';
+            var tableContainer = document.getElementById("tableContainer");
+            tableContainer.innerHTML = doctorsTable
+        }
+        else {
+            var dataNotFound = '<h4>No Data Found</h4>';
+            dataNotFound += '<p>Try different Keywords</p>';
+            var tableContainer = document.getElementById("tableContainer");
+            tableContainer.innerHTML = dataNotFound
+        }
     }
 
 

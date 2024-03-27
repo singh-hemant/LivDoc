@@ -10,6 +10,7 @@ using LivDocApp.Models;
 using System.Drawing.Printing;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
 
 namespace LivDocApp.Controllers
 {
@@ -24,16 +25,30 @@ namespace LivDocApp.Controllers
             _context = context;
             _env = env;
         }
-        
+
 
         // GET: Doctors
         public async Task<IActionResult> Index()
         {
-            var doctorsDbContext = _context.Doctors.Include(d => d.Hospital).Include(d => d.Specialty);
-            return View(await doctorsDbContext.ToListAsync());
+            //var doctorsDbContext = _context.Doctors.Include(d => d.Hospital).Include(d => d.Specialty);
+            //return View(await doctorsDbContext.ToListAsync());
+
+            var doctors = await _context.Doctors
+            .Include(d => d.Hospital)
+            .Include(d => d.Hospital.Location)
+            .Include(d => d.Specialty)
+            .ToListAsync();
+
+            //return Json(doctors);
+
+            var jsonContent = JsonConvert.SerializeObject(doctors);
+
+            // Pass JSON data to the view
+            ViewData["Doctors"] = jsonContent;
+            return View();
         }
 
-        // GET: Doctors/Details/5
+            // GET: Doctors/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

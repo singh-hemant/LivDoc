@@ -42,7 +42,7 @@ namespace LivDocApp.Controllers
             return View();
         }
       
-
+        [Authorize]
         public IActionResult PageSearch()
         {
             return View();
