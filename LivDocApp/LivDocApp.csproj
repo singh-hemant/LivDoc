@@ -28,4 +28,12 @@
     <Folder Include="Properties\ServiceDependencies\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\SIN_HEM\Source\Repos\singh-hemant\LivDoc\LivDocApp\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\SIN_HEM\Source\Repos\singh-hemant\LivDoc\LivDocApp\.editorconfig" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,35 @@
+USE [Doctors]
+GO
+
+-- Generate dates for the next 3 months
+WITH DateSlots AS (
+    SELECT 
+        DATEADD(DAY, number, DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0)) AS appointmentDate
+    FROM master..spt_values
+    WHERE type = 'P' AND number BETWEEN 0 AND 89 -- 90 days (3 months)
+),
+-- Generate time slots for each date
+TimeSlots AS (
+    SELECT DISTINCT 
+        DATEADD(HOUR, n, d.appointmentDate) AS appointmentDateTime,
+        n AS TimeSlot
+    FROM 
+        DateSlots d
+    CROSS APPLY 
+        (VALUES (0), (1), (2), (3), (4), (5), (6), (7), (8), (9)) AS SlotNumbers(n)
+)
+-- Insert appointments for each doctor on each date-time slot
+INSERT INTO Appointments (doctorID, AppointmentDate, TimeSlot, Status)
+SELECT 
+    Doctors.doctorId,
+    CAST(t.appointmentDateTime AS DATE) AS AppointmentDate,
+    t.TimeSlot,
+	0
+FROM 
+    TimeSlots t
+CROSS JOIN 
+    Doctors;
+
+GO
+
+
